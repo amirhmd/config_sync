@@ -1,0 +1,12 @@
+/home/amirhmd/projects/config_sync/src/ConfigSync.Domain/bin/Debug/net10.0/ConfigSync.Domain.deps.json
+/home/amirhmd/projects/config_sync/src/ConfigSync.Domain/bin/Debug/net10.0/ConfigSync.Domain.dll
+/home/amirhmd/projects/config_sync/src/ConfigSync.Domain/bin/Debug/net10.0/ConfigSync.Domain.pdb
+/home/amirhmd/projects/config_sync/src/ConfigSync.Domain/obj/Debug/net10.0/ConfigSync.Domain.GeneratedMSBuildEditorConfig.editorconfig
+/home/amirhmd/projects/config_sync/src/ConfigSync.Domain/obj/Debug/net10.0/ConfigSync.Domain.AssemblyInfoInputs.cache
+/home/amirhmd/projects/config_sync/src/ConfigSync.Domain/obj/Debug/net10.0/ConfigSync.Domain.AssemblyInfo.cs
+/home/amirhmd/projects/config_sync/src/ConfigSync.Domain/obj/Debug/net10.0/ConfigSync.Domain.csproj.CoreCompileInputs.cache
+/home/amirhmd/projects/config_sync/src/ConfigSync.Domain/obj/Debug/net10.0/ConfigSync.Domain.sourcelink.json
+/home/amirhmd/projects/config_sync/src/ConfigSync.Domain/obj/Debug/net10.0/ConfigSync.Domain.dll
+/home/amirhmd/projects/config_sync/src/ConfigSync.Domain/obj/Debug/net10.0/refint/ConfigSync.Domain.dll
+/home/amirhmd/projects/config_sync/src/ConfigSync.Domain/obj/Debug/net10.0/ConfigSync.Domain.pdb
+/home/amirhmd/projects/config_sync/src/ConfigSync.Domain/obj/Debug/net10.0/ref/ConfigSync.Domain.dll

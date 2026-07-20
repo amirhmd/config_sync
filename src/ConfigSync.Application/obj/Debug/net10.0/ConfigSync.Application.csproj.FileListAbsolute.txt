@@ -1,0 +1,16 @@
+/home/amirhmd/projects/config_sync/src/ConfigSync.Application/bin/Debug/net10.0/ConfigSync.Application.deps.json
+/home/amirhmd/projects/config_sync/src/ConfigSync.Application/bin/Debug/net10.0/ConfigSync.Application.dll
+/home/amirhmd/projects/config_sync/src/ConfigSync.Application/bin/Debug/net10.0/ConfigSync.Application.pdb
+/home/amirhmd/projects/config_sync/src/ConfigSync.Application/bin/Debug/net10.0/ConfigSync.Domain.dll
+/home/amirhmd/projects/config_sync/src/ConfigSync.Application/bin/Debug/net10.0/ConfigSync.Domain.pdb
+/home/amirhmd/projects/config_sync/src/ConfigSync.Application/obj/Debug/net10.0/ConfigSync.Application.csproj.AssemblyReference.cache
+/home/amirhmd/projects/config_sync/src/ConfigSync.Application/obj/Debug/net10.0/ConfigSync.Application.GeneratedMSBuildEditorConfig.editorconfig
+/home/amirhmd/projects/config_sync/src/ConfigSync.Application/obj/Debug/net10.0/ConfigSync.Application.AssemblyInfoInputs.cache
+/home/amirhmd/projects/config_sync/src/ConfigSync.Application/obj/Debug/net10.0/ConfigSync.Application.AssemblyInfo.cs
+/home/amirhmd/projects/config_sync/src/ConfigSync.Application/obj/Debug/net10.0/ConfigSync.Application.csproj.CoreCompileInputs.cache
+/home/amirhmd/projects/config_sync/src/ConfigSync.Application/obj/Debug/net10.0/ConfigSync.Application.sourcelink.json
+/home/amirhmd/projects/config_sync/src/ConfigSync.Application/obj/Debug/net10.0/ConfigSy.D63022D3.Up2Date
+/home/amirhmd/projects/config_sync/src/ConfigSync.Application/obj/Debug/net10.0/ConfigSync.Application.dll
+/home/amirhmd/projects/config_sync/src/ConfigSync.Application/obj/Debug/net10.0/refint/ConfigSync.Application.dll
+/home/amirhmd/projects/config_sync/src/ConfigSync.Application/obj/Debug/net10.0/ConfigSync.Application.pdb
+/home/amirhmd/projects/config_sync/src/ConfigSync.Application/obj/Debug/net10.0/ref/ConfigSync.Application.dll

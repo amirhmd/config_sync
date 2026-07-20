@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "N4tJQcM+Zp8=",
+  "success": true,
+  "projectFilePath": "/home/amirhmd/projects/config_sync/src/ConfigSync.Application/ConfigSync.Application.csproj",
+  "expectedPackageFiles": [
+    "/home/amirhmd/.nuget/packages/system.reactive/7.0.0/system.reactive.7.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}

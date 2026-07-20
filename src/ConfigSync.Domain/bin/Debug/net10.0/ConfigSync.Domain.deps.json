@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v10.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v10.0": {
+      "ConfigSync.Domain/1.0.0": {
+        "runtime": {
+          "ConfigSync.Domain.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "ConfigSync.Domain/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

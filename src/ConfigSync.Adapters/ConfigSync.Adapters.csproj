@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <ItemGroup>
+        <!-- Adapters depends on Application ports -->
+        <ProjectReference Include="../ConfigSync.Application/ConfigSync.Application.csproj" />
+        <!-- Adapters depends on Infrastructure's low-level connection/client setup -->
+        <ProjectReference Include="../ConfigSync.Infrastructure/ConfigSync.Infrastructure.csproj" />
+    </ItemGroup>
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+    </PropertyGroup>
+</Project>
