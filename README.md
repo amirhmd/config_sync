@@ -27,3 +27,15 @@ Hexagonal: `Domain` (data only) → `Application` (use cases + ports) → `Adapt
 - End-to-end traceability of ingestion runs and API requests
 - Retry/backoff on transient external or DB failures
 - Externally configurable sources, schedules, connections
+
+## Running locally
+
+Start:
+```bash
+./local-dev/local_dev_start.sh
+```
+
+Stop:
+```bash
+./local-dev/local_dev_stop.sh
+```

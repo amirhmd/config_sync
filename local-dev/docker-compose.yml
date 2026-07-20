@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:18.4
+    container_name: configsync-postgres
+    environment:
+      POSTGRES_USER: configsync
+      POSTGRES_PASSWORD: configsync
+      POSTGRES_DB: configsync
+    ports:
+      - "5432:5432"
+    volumes:
+      - configsync-postgres-data:/var/lib/postgresql
+
+volumes:
+  configsync-postgres-data:
