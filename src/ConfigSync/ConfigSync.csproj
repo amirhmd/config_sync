@@ -6,6 +6,9 @@
     <ProjectReference Include="../ConfigSync.Infrastructure/ConfigSync.Infrastructure.csproj" />
     <ProjectReference Include="../ConfigSync.Adapters/ConfigSync.Adapters.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="JetBrains.Annotations" Version="2026.2.0" />
+  </ItemGroup>
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
