@@ -2,12 +2,11 @@
 
   <ItemGroup>
     <!-- Application depends on Domain -->
-    <!-- Windows style path separatore MSBuild normalize it at build time-->
-    <ProjectReference Include="..\ConfigSync.Domain\ConfigSync.Domain.csproj" />
+    <ProjectReference Include="../ConfigSync.Domain/ConfigSync.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <!-- Rx.NET: gives us IObservable<T> / Unit for reactive-style programming -->
+    <!-- Rx.NET for reactive-style programming -->
     <PackageReference Include="System.Reactive" Version="7.0.0" />
   </ItemGroup>
 

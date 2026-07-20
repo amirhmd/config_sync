@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/ConfigSync.Domain/ConfigSync.Domain.csproj" />
+    <Project Path="src/ConfigSync.Application/ConfigSync.Application.csproj" />
+    <Project Path="src/ConfigSync.Infrastructure/ConfigSync.Infrastructure.csproj" />
+    <Project Path="src/ConfigSync.Adapters/ConfigSync.Adapters.csproj" />
+    <Project Path="src/ConfigSync/ConfigSync.csproj" />
+  </Folder>
+</Solution>
