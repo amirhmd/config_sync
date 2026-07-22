@@ -28,6 +28,39 @@ Hexagonal: `Domain` (data only) → `Application` (use cases + ports) → `Adapt
 - Retry/backoff on transient external or DB failures
 - Externally configurable sources, schedules, connections
 
+## Mock device simulator
+
+`local-dev/mock-devices/` contains fake network devices, used for manually testing SSH-based device interaction.
+
+Each device is a real `sshd` server (via `panubo/docker-sshd`) with a `ForceCommand` that intercepts whatever the client 
+asks to run, matches it against a set of canned responses, and returns fixed, realistic-looking output instead of actually 
+executing anything.
+
+
+### Connecting to a device
+
+```bash
+ssh -i local-dev/mock-devices/keys/mock_devices_key -p 2201 device@localhost "show version"
+```
+
+| Device | Port |
+|---|---|
+| device1 | 2201 |
+
+The SSH key pair (`local-dev/mock-devices/keys/`) only unlocks these local mock devices.
+
+If you ever need to regenerate it:
+
+```bash
+ssh-keygen -t ed25519 -f local-dev/mock-devices/keys/mock_devices_key -N "" -C "mock-devices-local-testing"
+```
+
+### Adding a new device
+
+1. Create `local-dev/mock-devices/deviceN/respond.sh` — a `case "$SSH_ORIGINAL_COMMAND"` script returning canned text per command.
+2. Create `local-dev/mock-devices/deviceN/force-command.conf` — one line: `ForceCommand /etc/mock/respond.sh`.
+3. Add a `deviceN` service block to `local-dev/docker-compose.yml`, mounting both files plus the shared public key, on a new host port.
+
 ## Running locally
 
 Start:

@@ -20,6 +20,18 @@ services:
       POSTGRES_DB: atlas
     ports:
       - "5433:5432"
+  device1:
+    image: quay.io/panubo/sshd:1.10.0
+    container_name: mock-device1
+    environment:
+      SSH_USERS: "device:900:900"
+    ports:
+      - "2201:22"
+    volumes:
+      - ./mock-devices/keys/mock_devices_key.pub:/etc/authorized_keys/device
+      - ./mock-devices/device1/respond.sh:/etc/mock/respond.sh:ro
+      - ./mock-devices/device1/force-command.conf:/etc/ssh/sshd_config.d/force-command.conf:ro
+
 
 volumes:
   configsync-postgres-data:
