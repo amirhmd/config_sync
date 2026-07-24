@@ -1,17 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <ItemGroup>
     <!-- Application depends on Domain -->
     <ProjectReference Include="../ConfigSync.Domain/ConfigSync.Domain.csproj" />
   </ItemGroup>
-
   <ItemGroup>
     <!-- Rx.NET for reactive-style programming -->
-    <PackageReference Include="System.Reactive" Version="7.0.0" />
+    <PackageReference Include="System.Reactive" />
   </ItemGroup>
-
-  <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
-  </PropertyGroup>
-
 </Project>

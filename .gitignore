@@ -1,3 +1,5 @@
 /.idea/
 /src/*/bin/
 /src/*/obj/
+/tests/*/obj/
+/tests/*/bin/

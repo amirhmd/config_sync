@@ -5,13 +5,8 @@
         <!-- Adapters depends on Infrastructure's low-level connection/client setup -->
         <ProjectReference Include="../ConfigSync.Infrastructure/ConfigSync.Infrastructure.csproj" />
     </ItemGroup>
-
     <ItemGroup>
         <!-- access to ASP.NET Core types without making project runnable -->
         <FrameworkReference Include="Microsoft.AspNetCore.App" />
     </ItemGroup>
-
-    <PropertyGroup>
-        <TargetFramework>net10.0</TargetFramework>
-    </PropertyGroup>
 </Project>

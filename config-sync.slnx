@@ -6,4 +6,7 @@
     <Project Path="src/ConfigSync.Adapters/ConfigSync.Adapters.csproj" />
     <Project Path="src/ConfigSync/ConfigSync.csproj" />
   </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/ConfigSync.Tests/ConfigSync.Tests.csproj" />
+  </Folder>
 </Solution>
