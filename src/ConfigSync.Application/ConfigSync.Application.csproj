@@ -6,5 +6,7 @@
   <ItemGroup>
     <!-- Rx.NET for reactive-style programming -->
     <PackageReference Include="System.Reactive" />
+    <!-- IServiceCollection for AddApplication() DI extension method -->
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
   </ItemGroup>
 </Project>

@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <ItemGroup>
-        <ProjectReference Include="../../src/ConfigSync/ConfigSync.csproj" />
+        <ProjectReference Include="../../src/ConfigSync.Domain/ConfigSync.Domain.csproj" />
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Microsoft.NET.Test.Sdk" PrivateAssets="All" />

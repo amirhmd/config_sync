@@ -7,6 +7,10 @@
     <Project Path="src/ConfigSync/ConfigSync.csproj" />
   </Folder>
   <Folder Name="/tests/">
+    <Project Path="tests/ConfigSync.Domain.Tests/ConfigSync.Domain.Tests.csproj" />
+    <Project Path="tests/ConfigSync.Application.Tests/ConfigSync.Application.Tests.csproj" />
+    <Project Path="tests/ConfigSync.Infrastructure.Tests/ConfigSync.Infrastructure.Tests.csproj" />
+    <Project Path="tests/ConfigSync.Adapters.Tests/ConfigSync.Adapters.Tests.csproj" />
     <Project Path="tests/ConfigSync.Tests/ConfigSync.Tests.csproj" />
   </Folder>
 </Solution>
