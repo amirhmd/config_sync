@@ -29,8 +29,10 @@ public class Program
                 .AddConsoleExporter())
             .WithMetrics(metrics => metrics
                 .AddMeter("ConfigSync.Application")
-                .AddAspNetCoreInstrumentation()
-                .AddConsoleExporter());
+                .AddConsoleExporter((_, metricReaderOptions) =>
+                {
+                    metricReaderOptions.PeriodicExportingMetricReaderOptions.ExportIntervalMilliseconds = 6000_000;
+                }));
 
         builder.Services.AddApplication();
         builder.Services.AddAdapters();
