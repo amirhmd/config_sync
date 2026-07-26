@@ -1,22 +1,34 @@
+using System.Threading.Tasks;
 using ConfigSync.Adapters.In.Rest.Api;
 using ConfigSync.Adapters.In.Rest.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ConfigSync.Adapters.In.Rest;
 
 public static class RestEndpointMappings
 {
-    public static WebApplication MapAdapterEndpoints(this WebApplication app)
+    public static WebApplication MapAdapterEndpoints(
+        this WebApplication app)
     {
-        app.MapPost(Uris.Executions, async (
-            ExecuteCommandRequest request,
-            IExecuteCommandEndpoint endpoint) =>
-        {
-            ExecuteCommandResponse response = await endpoint.Execute(request);
-            return Results.Created($"{Uris.Executions}/{response.ReferenceId}", response);
-        });
+        app.MapPost(
+            Uris.Executions,
+            ExecuteCommand);
 
         return app;
+    }
+
+    private static async Task<IResult> ExecuteCommand(
+        [FromBody] ExecuteCommandRequest request,
+        [FromServices] IExecuteCommandEndpoint endpoint)
+    {
+        ExecuteCommandResponse response =
+            await endpoint.Execute(request);
+
+        string location =
+            $"{Uris.Executions}/{response.ReferenceId}";
+
+        return Results.Created(location, response);
     }
 }
