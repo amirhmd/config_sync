@@ -2,5 +2,13 @@
     <PropertyGroup>
         <TargetFramework>net10.0</TargetFramework>
         <ImplicitUsings>disable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <VSTestLogger>console%3bverbosity=detailed</VSTestLogger>
     </PropertyGroup>
+    <ItemDefinitionGroup>
+        <!-- each project must declare its own PackageReference for anything it directly uses -->
+        <PackageReference>
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+    </ItemDefinitionGroup>
 </Project>

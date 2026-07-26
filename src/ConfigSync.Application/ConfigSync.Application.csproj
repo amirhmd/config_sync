@@ -8,5 +8,6 @@
     <PackageReference Include="System.Reactive" />
     <!-- IServiceCollection for AddApplication() DI extension method -->
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
   </ItemGroup>
 </Project>

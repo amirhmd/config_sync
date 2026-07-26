@@ -1,23 +1,28 @@
 schema "public" {
 }
 
-table "configuration_entries" {
+table "devices" {
   schema = schema.public
 
   column "id" {
-    type = uuid
-  }
-  column "key" {
     type = text
   }
-  column "value" {
+  column "host" {
     type = text
   }
-  column "source" {
+  column "port" {
+    type = int
+  }
+  column "username" {
     type = text
   }
-  column "fetched_at" {
-    type = timestamptz
+  column "password" {
+    type = text
+    null = true
+  }
+  column "private_key" {
+    type = text
+    null = true
   }
 
   primary_key {
