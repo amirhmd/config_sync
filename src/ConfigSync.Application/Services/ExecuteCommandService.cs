@@ -1,6 +1,6 @@
 using System;
 using System.Diagnostics.Metrics;
-using System.Reactive.Linq;
+using System.Threading.Tasks;
 using ConfigSync.Application.Ports.In;
 using ConfigSync.Domain;
 using Microsoft.Extensions.Logging;
@@ -15,7 +15,7 @@ public class ExecuteCommandService(ILogger<ExecuteCommandService> logger, IMeter
             .Create("ConfigSync.Application")
             .CreateCounter<int>("configsync.execution_plans_submitted");
 
-    public IObservable<Guid> Execute(ExecutionPlan plan)
+    public Task<ExecutionReference> Execute(ExecutionPlan plan)
     {
         var referenceId = Guid.NewGuid();
 
@@ -25,6 +25,6 @@ public class ExecuteCommandService(ILogger<ExecuteCommandService> logger, IMeter
 
         _executionPlansSubmitted.Add(1);
 
-        return Observable.Return(referenceId);
+        return Task.FromResult(new ExecutionReference(referenceId));
     }
 }

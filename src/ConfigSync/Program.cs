@@ -1,3 +1,6 @@
+using ConfigSync.Adapters;
+using ConfigSync.Adapters.In.Rest;
+using ConfigSync.Application;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
@@ -29,10 +32,15 @@ public class Program
                 .AddAspNetCoreInstrumentation()
                 .AddConsoleExporter());
 
+        builder.Services.AddApplication();
+        builder.Services.AddAdapters();
+
         WebApplication app = builder.Build();
 
         ILogger<Program> logger = app.Services.GetRequiredService<ILogger<Program>>();
         logger.LogInformation("ConfigSync starting up in {Environment} environment", app.Environment.EnvironmentName);
+
+        app.MapAdapterEndpoints();
 
         app.Run();
     }

@@ -34,6 +34,22 @@ DB schema (Atlas, manual approval required):
 ./local-dev/db_clean.sh   # wipe (destructive, on-demand only)
 ```
 
+## API
+
+| Method | Path | Description |
+|---|---|---|
+| `POST` | `/v1/executions` | Submit commands to run against a set of devices, returns a reference-id |
+
+```bash
+curl -X POST http://localhost:5000/v1/executions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "commands": ["show version", "show interfaces"],
+    "deviceIds": ["device1", "device2"]
+  }'
+```
+
+
 ## Mock device simulator
 
 `local-dev/mock-devices/` contains fake network devices, used for manually testing SSH-based device interaction.

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Immutable;
 using System.Diagnostics.Metrics;
-using System.Reactive.Threading.Tasks;
 using System.Threading.Tasks;
 using ConfigSync.Application.Ports.In;
 using ConfigSync.Application.Services;
@@ -29,9 +28,9 @@ public class ExecuteCommandServiceTests
             DeviceIds: ImmutableList.Create("device123"));
 
         // when
-        Guid referenceId = await given.Execute(plan).ToTask();
+        ExecutionReference reference = await given.Execute(plan);
 
         // then
-        Assert.NotEqual(Guid.Empty, referenceId);
+        Assert.NotEqual(Guid.Empty, reference.ReferenceId);
     }
 }

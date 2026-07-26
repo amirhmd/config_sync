@@ -1,11 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <ItemGroup>
         <ProjectReference Include="../../src/ConfigSync.Adapters/ConfigSync.Adapters.csproj" />
+        <ProjectReference Include="../../src/ConfigSync.Application/ConfigSync.Application.csproj" />
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Microsoft.NET.Test.Sdk" PrivateAssets="All" />
         <PackageReference Include="xunit.v3" />
         <PackageReference Include="xunit.runner.visualstudio" PrivateAssets="All" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+        <PackageReference Include="Microsoft.Extensions.Logging" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+        <PackageReference Include="Microsoft.Extensions.Diagnostics" />
     </ItemGroup>
     <PropertyGroup>
         <IsPackable>false</IsPackable>

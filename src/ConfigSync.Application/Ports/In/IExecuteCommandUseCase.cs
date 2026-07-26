@@ -1,9 +1,9 @@
-using System;
+using System.Threading.Tasks;
 using ConfigSync.Domain;
 
 namespace ConfigSync.Application.Ports.In;
 
 public interface IExecuteCommandUseCase
 {
-    IObservable<Guid> Execute(ExecutionPlan plan);
+    Task<ExecutionReference> Execute(ExecutionPlan plan);
 }
