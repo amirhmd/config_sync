@@ -1,8 +1,34 @@
 # ConfigSync
-Configuration ingestion and serving API. ASP.NET Core (Minimal API) · Dapper + Npgsql (no EF) · PostgreSQL · Orleans · Docker.
+An ASP.NET Core (Minimal API) service for submitting command execution plans to network devices (routers/switches). 
+a client posts a list of commands + a list of device IDs, and the system coordinates running those commands against 
+the target devices via SSH.
 
-## Architecture
-Hexagonal: `Domain` (data) → `Application` (use cases + ports) → `Adapters` (REST, persistence) / `Infrastructure` (connections) → `ConfigSync` (host).
+. ASP.NET Core (Minimal API) 
+· Dapper + Npgsql (no EF) 
+· PostgreSQL 
+· Orleans 
+· Docker.
+
+## Architecture — Hexagonal (Ports & Adapters)
+
+It follows strict hexagonal architecture, with 4 layers:ConfigSync.Domain pure data, no dependencies
+* Device.cs a network device: Id, Host, Port, Username, Password?, PrivateKey?
+* ExecutionPlan.cs immutable list of Commands + DeviceIds 
+* ExecutionReference.cs a Guid returned to the caller as a tracking ID
+
+ConfigSync.Application use cases + ports
+* IExecuteCommandUseCase.cs the inbound port: Execute(ExecutionPlan) → ExecutionReference
+* ExecuteCommandService.cs current implementation generates a Guid, logs, increments an OTel counter, and returns. 
+
+ConfigSync.Adapters inbound REST + outbound persistence stubs
+* ExecuteCommandEndpoint.cs maps HTTP request → domain → calls use case → returns 201 Created with a Location header and ReferenceId
+* ExecutionPlanMapper.cs converts ExecuteCommandRequest (REST model) → ExecutionPlan (domain)
+* DeviceEntity.cs DB row shape for a device
+* RestEndpointMappings.cs registers POST /v1/executions
+
+ConfigSync.Infrastructure currently an empty project 
+
+ConfigSync (host) Program.cs wires everything together: Serilog, OpenTelemetry traces + metrics, AddApplication(), AddAdapters()
 
 ## Commands
 
