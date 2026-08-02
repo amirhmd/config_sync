@@ -11,6 +11,7 @@
     <PackageReference Include="OpenTelemetry.Extensions.Hosting" />
     <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" />
     <PackageReference Include="OpenTelemetry.Exporter.Console" />
+    <PackageReference Include="Swashbuckle.AspNetCore" />
   </ItemGroup>
   <PropertyGroup>
     <OutputType>Exe</OutputType>
