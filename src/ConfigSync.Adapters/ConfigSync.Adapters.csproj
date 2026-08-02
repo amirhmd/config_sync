@@ -2,12 +2,20 @@
     <ItemGroup>
         <!-- Adapters depends on Application ports -->
         <ProjectReference Include="../ConfigSync.Application/ConfigSync.Application.csproj" />
-        <!-- Adapters depends on Infrastructure's low-level connection/client setup -->
-        <ProjectReference Include="../ConfigSync.Infrastructure/ConfigSync.Infrastructure.csproj" />
     </ItemGroup>
     <ItemGroup>
         <!-- access to ASP.NET Core types without making project runnable -->
         <!-- transitively provides Microsoft.Extensions.Logging.Abstractions, DependencyInjection.Abstractions, etc. -->
         <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Npgsql">
+            <!-- runtime dependency like Npgsql must be in the published output-->
+            <PrivateAssets>compile;build;native;contentfiles;analyzers;buildtransitive</PrivateAssets>
+        </PackageReference>
+    </ItemGroup>
+    <ItemGroup>
+        <!-- to access internal class for testing -->
+        <InternalsVisibleTo Include="ConfigSync.Adapters.Tests" />
     </ItemGroup>
 </Project>

@@ -35,7 +35,7 @@ public class Program
                 }));
 
         builder.Services.AddApplication();
-        builder.Services.AddAdapters();
+        builder.Services.AddAdapters(builder.Configuration);
 
         WebApplication app = builder.Build();
 

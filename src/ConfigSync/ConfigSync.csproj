@@ -3,7 +3,6 @@
     <!-- composition root: Main and the DI composition root etc -->
     <ProjectReference Include="../ConfigSync.Domain/ConfigSync.Domain.csproj" />
     <ProjectReference Include="../ConfigSync.Application/ConfigSync.Application.csproj" />
-    <ProjectReference Include="../ConfigSync.Infrastructure/ConfigSync.Infrastructure.csproj" />
     <ProjectReference Include="../ConfigSync.Adapters/ConfigSync.Adapters.csproj" />
   </ItemGroup>
   <ItemGroup>

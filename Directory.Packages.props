@@ -17,5 +17,6 @@
         <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.10" />
         <PackageVersion Include="Microsoft.Extensions.Diagnostics" Version="10.0.10" />
         <PackageVersion Include="Microsoft.Extensions.Diagnostics.Abstractions" Version="10.0.10" />
+        <PackageVersion Include="Npgsql" Version="10.0.3" />
     </ItemGroup>
 </Project>

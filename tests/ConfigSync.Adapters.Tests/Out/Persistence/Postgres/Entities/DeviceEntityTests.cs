@@ -1,7 +1,7 @@
-using ConfigSync.Adapters.Out.Persistence.Entities;
+using ConfigSync.Adapters.Out.Persistence.Postgres.Entities;
 using Xunit;
 
-namespace ConfigSync.Adapters.Tests.Out.Persistence.Entities;
+namespace ConfigSync.Adapters.Tests.Out.Persistence.Postgres.Entities;
 
 public class DeviceEntityTests
 {

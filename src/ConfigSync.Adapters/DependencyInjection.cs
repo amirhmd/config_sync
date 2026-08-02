@@ -1,16 +1,17 @@
-using ConfigSync.Adapters.In.Rest.Api;
-using ConfigSync.Adapters.In.Rest.Endpoints;
-using ConfigSync.Adapters.In.Rest.Mappers;
+using ConfigSync.Adapters.In.Rest;
+using ConfigSync.Adapters.Out.Persistence.Postgres;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ConfigSync.Adapters;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddAdapters(this IServiceCollection services)
+    public static IServiceCollection AddAdapters(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddSingleton<IExecutionPlanMapper, ExecutionPlanMapper>();
-        services.AddSingleton<IExecuteCommandEndpoint, ExecuteCommandEndpoint>();
+        services.AddRestAdapter();
+        services.AddPostgresAdapter(configuration);
+
         return services;
     }
 }

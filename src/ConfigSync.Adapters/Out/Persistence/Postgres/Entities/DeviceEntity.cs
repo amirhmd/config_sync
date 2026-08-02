@@ -1,4 +1,4 @@
-namespace ConfigSync.Adapters.Out.Persistence.Entities;
+namespace ConfigSync.Adapters.Out.Persistence.Postgres.Entities;
 
 public sealed class DeviceEntity
 {
