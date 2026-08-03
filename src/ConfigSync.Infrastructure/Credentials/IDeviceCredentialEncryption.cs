@@ -1,12 +1,9 @@
-namespace ConfigSync.Adapters.Out.Persistence.Postgres.Credentials;
+namespace ConfigSync.Infrastructure.Credentials;
 
-internal interface IDeviceCredentialEncryption
+public interface IDeviceCredentialEncryption
 {
     byte[] EncryptPassword(string password);
-
     byte[] EncryptPrivateKey(string privateKey);
-
     string DecryptPassword(byte[] encryptedPassword);
-
     string DecryptPrivateKey(byte[] encryptedPrivateKey);
 }

@@ -4,6 +4,7 @@
     <ProjectReference Include="../ConfigSync.Domain/ConfigSync.Domain.csproj" />
     <ProjectReference Include="../ConfigSync.Application/ConfigSync.Application.csproj" />
     <ProjectReference Include="../ConfigSync.Adapters/ConfigSync.Adapters.csproj" />
+    <ProjectReference Include="../ConfigSync.Infrastructure/ConfigSync.Infrastructure.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" />

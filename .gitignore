@@ -3,3 +3,6 @@
 /src/*/obj/
 /tests/*/obj/
 /tests/*/bin/
+
+# Data Protection key ring (local dev only)
+**/.keys/

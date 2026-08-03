@@ -3,9 +3,9 @@ using System.Security.Cryptography;
 using System.Text;
 using Microsoft.AspNetCore.DataProtection;
 
-namespace ConfigSync.Adapters.Out.Persistence.Postgres.Credentials;
+namespace ConfigSync.Infrastructure.Credentials;
 
-internal sealed class DeviceCredentialEncryption : IDeviceCredentialEncryption
+public sealed class DeviceCredentialEncryption : IDeviceCredentialEncryption
 {
     private const string PasswordPurpose = "ConfigSync.DeviceCredentials.Password.v1";
     private const string PrivateKeyPurpose = "ConfigSync.DeviceCredentials.PrivateKey.v1";
@@ -16,7 +16,6 @@ internal sealed class DeviceCredentialEncryption : IDeviceCredentialEncryption
     public DeviceCredentialEncryption(IDataProtectionProvider dataProtectionProvider)
     {
         ArgumentNullException.ThrowIfNull(dataProtectionProvider);
-
         _passwordProtector = dataProtectionProvider.CreateProtector(PasswordPurpose);
         _privateKeyProtector = dataProtectionProvider.CreateProtector(PrivateKeyPurpose);
     }
@@ -48,28 +47,14 @@ internal sealed class DeviceCredentialEncryption : IDeviceCredentialEncryption
     private static byte[] Encrypt(string value, IDataProtector protector)
     {
         var plaintextBytes = Encoding.UTF8.GetBytes(value);
-
-        try
-        {
-            return protector.Protect(plaintextBytes);
-        }
-        finally
-        {
-            CryptographicOperations.ZeroMemory(plaintextBytes);
-        }
+        try { return protector.Protect(plaintextBytes); }
+        finally { CryptographicOperations.ZeroMemory(plaintextBytes); }
     }
 
     private static string Decrypt(byte[] encryptedValue, IDataProtector protector)
     {
         var plaintextBytes = protector.Unprotect(encryptedValue);
-
-        try
-        {
-            return Encoding.UTF8.GetString(plaintextBytes);
-        }
-        finally
-        {
-            CryptographicOperations.ZeroMemory(plaintextBytes);
-        }
+        try { return Encoding.UTF8.GetString(plaintextBytes); }
+        finally { CryptographicOperations.ZeroMemory(plaintextBytes); }
     }
 }

@@ -10,7 +10,7 @@ public static class DependencyInjection
     public static IServiceCollection AddAdapters(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddRestAdapter();
-        services.AddPostgresAdapter(configuration);
+        services.AddPostgresPersistence(configuration);
 
         return services;
     }

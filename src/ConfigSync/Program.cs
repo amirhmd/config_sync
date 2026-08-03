@@ -1,6 +1,7 @@
 using ConfigSync.Adapters;
 using ConfigSync.Adapters.In.Rest;
 using ConfigSync.Application;
+using ConfigSync.Infrastructure;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -47,6 +48,7 @@ public class Program
             });
         });
         
+        builder.Services.AddInfrastructure(builder.Configuration);
         builder.Services.AddApplication();
         builder.Services.AddAdapters(builder.Configuration);
 

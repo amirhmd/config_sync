@@ -1,3 +1,4 @@
+using ConfigSync.Adapters;
 using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
@@ -84,6 +85,40 @@ public class PostgresDependencyInjectionTests
             {
                 ["Postgres:MinimumPoolSize"] = "30",
                 ["Postgres:MaximumPoolSize"] = "20"
+            }));
+        var provider = services.BuildServiceProvider();
+
+        // when / then
+        Assert.Throws<OptionsValidationException>(provider.GetRequiredService<NpgsqlDataSource>);
+    }
+    
+    [Fact]
+    public void AddAdapters_InvalidConnectionTimeoutSeconds_ThrowsOnResolution()
+    {
+        // given
+        var services = new ServiceCollection();
+        services.AddLogging();
+        services.AddAdapters(AdaptersTestConfiguration.Build(
+            new Dictionary<string, string?>
+            {
+                ["Postgres:ConnectionTimeoutSeconds"] = "-1"
+            }));
+        var provider = services.BuildServiceProvider();
+
+        // when / then
+        Assert.Throws<OptionsValidationException>(provider.GetRequiredService<NpgsqlDataSource>);
+    }
+
+    [Fact]
+    public void AddAdapters_InvalidCommandTimeoutSeconds_ThrowsOnResolution()
+    {
+        // given
+        var services = new ServiceCollection();
+        services.AddLogging();
+        services.AddAdapters(AdaptersTestConfiguration.Build(
+            new Dictionary<string, string?>
+            {
+                ["Postgres:CommandTimeoutSeconds"] = "-1"
             }));
         var provider = services.BuildServiceProvider();
 

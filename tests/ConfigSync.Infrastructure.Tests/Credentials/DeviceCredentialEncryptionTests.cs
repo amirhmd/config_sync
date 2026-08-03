@@ -1,12 +1,12 @@
 using System;
 using System.Security.Cryptography;
 using System.Text;
-using ConfigSync.Adapters.Out.Persistence.Postgres.Credentials;
+using ConfigSync.Infrastructure.Credentials;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
-namespace ConfigSync.Adapters.Tests.Out.Persistence.Postgres.Credentials;
+namespace ConfigSync.Infrastructure.Tests.Credentials;
 
 public class DeviceCredentialEncryptionTests
 {
@@ -185,12 +185,8 @@ public class DeviceCredentialEncryptionTests
         var encryptedPrivateKey = encryption.EncryptPrivateKey("my-key");
 
         // when / then
-        // Separate protectors per credential type mean that bytes
-        // encrypted under the private-key purpose cannot be decrypted
-        // under the password purpose — the cryptographic layer enforces
-        // type isolation, not just the database column.
-        Assert.Throws<CryptographicException>(() =>
-            encryption.DecryptPassword(encryptedPrivateKey));
+        // bytes encrypted under the private-key purpose cannot be decrypted under the password purpose
+        Assert.Throws<CryptographicException>(() => encryption.DecryptPassword(encryptedPrivateKey));
     }
 
     [Fact]
@@ -201,7 +197,6 @@ public class DeviceCredentialEncryptionTests
         var encryptedPassword = encryption.EncryptPassword("my-password");
 
         // when / then
-        Assert.Throws<CryptographicException>(() =>
-            encryption.DecryptPrivateKey(encryptedPassword));
+        Assert.Throws<CryptographicException>(() => encryption.DecryptPrivateKey(encryptedPassword));
     }
 }
