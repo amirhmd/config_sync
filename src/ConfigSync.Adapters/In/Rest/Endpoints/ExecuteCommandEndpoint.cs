@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using ConfigSync.Adapters.In.Rest.Api;
 using ConfigSync.Adapters.In.Rest.Mappers;
@@ -9,10 +10,10 @@ namespace ConfigSync.Adapters.In.Rest.Endpoints;
 public class ExecuteCommandEndpoint(IExecuteCommandUseCase useCase, IExecutionPlanMapper mapper)
     : IExecuteCommandEndpoint
 {
-    public async Task<ExecuteCommandResponse> Execute(ExecuteCommandRequest request)
+    public async Task<ExecuteCommandResponse> Execute(ExecuteCommandRequest request, CancellationToken cancellationToken)
     {
         var plan = mapper.ToDomain(request);
-        var executionReference = await useCase.Execute(plan);
+        var executionReference = await useCase.Execute(plan, cancellationToken);
         return new ExecuteCommandResponse { ReferenceId = executionReference.ReferenceId };
     }
 }

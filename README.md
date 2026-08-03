@@ -32,9 +32,14 @@ Build:
 dotnet build
 ```
 
-Test:
+test:
 ```bash
-dotnet test
+dotnet test --filter "Category!=Integration"
+```
+
+integration-test:
+```bash
+dotnet test --filter "Category=Integration"
 ```
 
 List packages:

@@ -4,6 +4,7 @@ using ConfigSync.Application;
 using ConfigSync.Infrastructure;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Builder;
+using ConfigSync.Infrastructure.Health;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -48,9 +49,11 @@ public class Program
             });
         });
         
+        // Infrastructure first: registers NpgsqlDataSource, IDeviceCredentialEncryption, and Data Protection
+        // Adapters resolve them later from the container.
         builder.Services.AddInfrastructure(builder.Configuration);
         builder.Services.AddApplication();
-        builder.Services.AddAdapters(builder.Configuration);
+        builder.Services.AddAdapters();
 
         WebApplication app = builder.Build();
         
@@ -68,6 +71,7 @@ public class Program
         app.MapGet("/", () => Results.Redirect("/swagger")).ExcludeFromDescription();
         
         app.MapAdapterEndpoints();
+        app.MapHealthEndpoints();
 
         app.Run();
     }

@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics.Metrics;
+using System.Threading;
 using System.Threading.Tasks;
 using ConfigSync.Application.Ports.In;
 using ConfigSync.Domain;
@@ -15,7 +16,7 @@ public class ExecuteCommandService(ILogger<ExecuteCommandService> logger, IMeter
             .Create("ConfigSync.Application")
             .CreateCounter<int>("configsync.execution_plans_submitted");
 
-    public Task<ExecutionReference> Execute(ExecutionPlan plan)
+    public Task<ExecutionReference> Execute(ExecutionPlan plan, CancellationToken cancellationToken)
     {
         var referenceId = Guid.NewGuid();
 

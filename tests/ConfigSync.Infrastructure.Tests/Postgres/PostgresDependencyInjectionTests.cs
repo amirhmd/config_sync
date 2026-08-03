@@ -1,22 +1,22 @@
-using ConfigSync.Adapters;
 using System;
 using System.Collections.Generic;
+using ConfigSync.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Npgsql;
 using Xunit;
 
-namespace ConfigSync.Adapters.Tests.Out.Persistence.Postgres;
+namespace ConfigSync.Infrastructure.Tests.Postgres;
 
 public class PostgresDependencyInjectionTests
 {
     [Fact]
-    public void AddAdapters_RegistersNpgsqlDataSourceAsSingleton()
+    public void AddInfrastructure_RegistersNpgsqlDataSourceAsSingleton()
     {
         // given
         var services = new ServiceCollection();
         services.AddLogging();
-        services.AddAdapters(AdaptersTestConfiguration.Build());
+        services.AddInfrastructure(InfrastructureTestConfiguration.Build());
         var provider = services.BuildServiceProvider();
 
         // when
@@ -28,10 +28,10 @@ public class PostgresDependencyInjectionTests
     }
 
     [Fact]
-    public void AddAdapters_MissingConnectionString_ThrowsAtRegistration()
+    public void AddInfrastructure_MissingConnectionString_ThrowsAtRegistration()
     {
         // given
-        var configuration = AdaptersTestConfiguration.Build(new Dictionary<string, string?>
+        var configuration = InfrastructureTestConfiguration.Build(new Dictionary<string, string?>
             {
                 ["ConnectionStrings:Postgres"] = null
             });
@@ -39,17 +39,17 @@ public class PostgresDependencyInjectionTests
         services.AddLogging();
 
         // when / then
-        Assert.Throws<InvalidOperationException>(() => services.AddAdapters(configuration));
+        Assert.Throws<InvalidOperationException>(() =>
+            services.AddInfrastructure(configuration));
     }
 
     [Fact]
-    public void AddAdapters_InvalidMaximumPoolSize_ThrowsOnResolution()
+    public void AddInfrastructure_InvalidMaximumPoolSize_ThrowsOnResolution()
     {
         // given
         var services = new ServiceCollection();
         services.AddLogging();
-        services.AddAdapters(AdaptersTestConfiguration.Build(
-            new Dictionary<string, string?>
+        services.AddInfrastructure(InfrastructureTestConfiguration.Build(new Dictionary<string, string?>
             {
                 ["Postgres:MaximumPoolSize"] = "-1"
             }));
@@ -60,12 +60,12 @@ public class PostgresDependencyInjectionTests
     }
 
     [Fact]
-    public void AddAdapters_NegativeMinimumPoolSize_ThrowsOnResolution()
+    public void AddInfrastructure_NegativeMinimumPoolSize_ThrowsOnResolution()
     {
         // given
         var services = new ServiceCollection();
         services.AddLogging();
-        services.AddAdapters(AdaptersTestConfiguration.Build(new Dictionary<string, string?>
+        services.AddInfrastructure(InfrastructureTestConfiguration.Build(new Dictionary<string, string?>
             {
                 ["Postgres:MinimumPoolSize"] = "-1"
             }));
@@ -76,12 +76,12 @@ public class PostgresDependencyInjectionTests
     }
 
     [Fact]
-    public void AddAdapters_MinimumExceedsMaximum_ThrowsOnResolution()
+    public void AddInfrastructure_MinimumExceedsMaximum_ThrowsOnResolution()
     {
         // given
         var services = new ServiceCollection();
         services.AddLogging();
-        services.AddAdapters(AdaptersTestConfiguration.Build(new Dictionary<string, string?>
+        services.AddInfrastructure(InfrastructureTestConfiguration.Build(new Dictionary<string, string?>
             {
                 ["Postgres:MinimumPoolSize"] = "30",
                 ["Postgres:MaximumPoolSize"] = "20"
@@ -91,15 +91,14 @@ public class PostgresDependencyInjectionTests
         // when / then
         Assert.Throws<OptionsValidationException>(provider.GetRequiredService<NpgsqlDataSource>);
     }
-    
+
     [Fact]
-    public void AddAdapters_InvalidConnectionTimeoutSeconds_ThrowsOnResolution()
+    public void AddInfrastructure_InvalidConnectionTimeoutSeconds_ThrowsOnResolution()
     {
         // given
         var services = new ServiceCollection();
         services.AddLogging();
-        services.AddAdapters(AdaptersTestConfiguration.Build(
-            new Dictionary<string, string?>
+        services.AddInfrastructure(InfrastructureTestConfiguration.Build(new Dictionary<string, string?>
             {
                 ["Postgres:ConnectionTimeoutSeconds"] = "-1"
             }));
@@ -110,13 +109,12 @@ public class PostgresDependencyInjectionTests
     }
 
     [Fact]
-    public void AddAdapters_InvalidCommandTimeoutSeconds_ThrowsOnResolution()
+    public void AddInfrastructure_InvalidCommandTimeoutSeconds_ThrowsOnResolution()
     {
         // given
         var services = new ServiceCollection();
         services.AddLogging();
-        services.AddAdapters(AdaptersTestConfiguration.Build(
-            new Dictionary<string, string?>
+        services.AddInfrastructure(InfrastructureTestConfiguration.Build(new Dictionary<string, string?>
             {
                 ["Postgres:CommandTimeoutSeconds"] = "-1"
             }));

@@ -16,7 +16,7 @@ public class RestDependencyInjectionTests
         services.AddLogging();
         services.AddMetrics();
         services.AddApplication();
-        services.AddAdapters(AdaptersTestConfiguration.Build());
+        services.AddAdapters();
         var provider = services.BuildServiceProvider();
 
         // when
@@ -35,7 +35,7 @@ public class RestDependencyInjectionTests
         services.AddLogging();
         services.AddMetrics();
         services.AddApplication();
-        services.AddAdapters(AdaptersTestConfiguration.Build());
+        services.AddAdapters();
         var provider = services.BuildServiceProvider();
 
         // when

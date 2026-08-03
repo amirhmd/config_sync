@@ -1,12 +1,12 @@
 using System.Collections.Generic;
+using System.IO;
 using Microsoft.Extensions.Configuration;
 
-namespace ConfigSync.Adapters.Tests;
+namespace ConfigSync.Infrastructure.Tests;
 
-internal static class AdaptersTestConfiguration
+internal static class InfrastructureTestConfiguration
 {
-    internal static IConfiguration Build(
-        Dictionary<string, string?>? overrides = null)
+    internal static IConfiguration Build(Dictionary<string, string?>? overrides = null)
     {
         var values = new Dictionary<string, string?>
         {
@@ -15,7 +15,9 @@ internal static class AdaptersTestConfiguration
             ["Postgres:MaximumPoolSize"] = "20",
             ["Postgres:MinimumPoolSize"] = "0",
             ["Postgres:ConnectionTimeoutSeconds"] = "15",
-            ["Postgres:CommandTimeoutSeconds"] = "30"
+            ["Postgres:CommandTimeoutSeconds"] = "30",
+            ["DataProtection:KeyPath"] =
+                Path.Combine(Path.GetTempPath(), "configsync-test-keys")
         };
 
         if (overrides is not null)

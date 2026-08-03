@@ -33,7 +33,8 @@ public class ExecuteCommandEndpointTests
         };
 
         // when
-        ExecuteCommandResponse response = await endpoint.Execute(request);
+        ExecuteCommandResponse response =
+            await endpoint.Execute(request, TestContext.Current.CancellationToken);
 
         // then
         Assert.NotEqual(Guid.Empty, response.ReferenceId);

@@ -28,7 +28,8 @@ public class ExecuteCommandServiceTests
             DeviceIds: ImmutableList.Create("device123"));
 
         // when
-        ExecutionReference reference = await given.Execute(plan);
+        ExecutionReference reference =
+            await given.Execute(plan, TestContext.Current.CancellationToken);
 
         // then
         Assert.NotEqual(Guid.Empty, reference.ReferenceId);

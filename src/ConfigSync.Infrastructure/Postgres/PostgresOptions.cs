@@ -1,4 +1,4 @@
-namespace ConfigSync.Adapters.Out.Persistence.Postgres;
+namespace ConfigSync.Infrastructure.Postgres;
 
 internal sealed class PostgresOptions
 {

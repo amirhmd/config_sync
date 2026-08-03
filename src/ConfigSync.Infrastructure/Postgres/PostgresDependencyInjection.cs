@@ -1,16 +1,16 @@
 using System;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Npgsql;
 
-namespace ConfigSync.Adapters.Out.Persistence.Postgres;
+namespace ConfigSync.Infrastructure.Postgres;
 
 internal static class PostgresDependencyInjection
 {
-    internal static IServiceCollection AddPostgresPersistence(this IServiceCollection services,
-        IConfiguration configuration)
+    internal static IServiceCollection AddPostgresInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         services
             .AddOptions<PostgresOptions>()
@@ -40,9 +40,7 @@ internal static class PostgresDependencyInjection
         services.AddSingleton<NpgsqlDataSource>(serviceProvider =>
         {
             var options = serviceProvider.GetRequiredService<IOptions<PostgresOptions>>().Value;
-
             var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
-
             var connectionStringBuilder = new NpgsqlConnectionStringBuilder(connectionString)
             {
                 Pooling = true,
@@ -53,10 +51,20 @@ internal static class PostgresDependencyInjection
             };
 
             var dataSourceBuilder = new NpgsqlDataSourceBuilder(connectionStringBuilder.ConnectionString);
+
             dataSourceBuilder.UseLoggerFactory(loggerFactory);
             dataSourceBuilder.Name = "ConfigSync.Postgres";
+
             return dataSourceBuilder.Build();
         });
+
+        services
+            .AddHealthChecks()
+            .AddCheck<PostgresHealthCheck>(
+                name: "postgres",
+                failureStatus: HealthStatus.Unhealthy,
+                tags: ["readiness"],
+                timeout: TimeSpan.FromSeconds(2));
 
         return services;
     }

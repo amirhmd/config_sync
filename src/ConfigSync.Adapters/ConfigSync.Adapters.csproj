@@ -9,12 +9,6 @@
         <FrameworkReference Include="Microsoft.AspNetCore.App" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Npgsql">
-            <!-- runtime dependency like Npgsql must be in the published output-->
-            <PrivateAssets>compile;build;native;contentfiles;analyzers;buildtransitive</PrivateAssets>
-        </PackageReference>
-    </ItemGroup>
-    <ItemGroup>
         <!-- to access internal class for testing -->
         <InternalsVisibleTo Include="ConfigSync.Adapters.Tests" />
     </ItemGroup>
