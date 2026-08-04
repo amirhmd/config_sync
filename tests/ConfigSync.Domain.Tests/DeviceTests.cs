@@ -1,72 +1,97 @@
+using System;
 using Xunit;
 
 namespace ConfigSync.Domain.Tests;
 
 public class DeviceTests
 {
+    private static Device NewDevice(DeviceCredential credential) =>
+        new("router_01", "localhost", 2201, "device", credential);
+
     [Fact]
     public void Constructor_SetsAllProperties()
     {
         // given
-        var given = new Device(
-            Id: "device123",
-            Host: "localhost",
-            Port: 2201,
-            Username: "device",
-            AuthenticationType: DeviceAuthenticationType.PrivateKey,
-            Version: 1);
+        var credential = DeviceCredential.Password("s3cr3t");
+
+        // when
+        var device = NewDevice(credential);
 
         // then
-        Assert.Equal("device123", given.Id);
-        Assert.Equal("localhost", given.Host);
-        Assert.Equal(2201, given.Port);
-        Assert.Equal("device", given.Username);
-        Assert.Equal(DeviceAuthenticationType.PrivateKey, given.AuthenticationType);
-        Assert.Equal(1, given.Version);
+        Assert.Equal("router_01", device.Name);
+        Assert.Equal("localhost", device.Host);
+        Assert.Equal(2201, device.Port);
+        Assert.Equal("device", device.Username);
+        Assert.Same(credential, device.Credential);
     }
 
     [Fact]
-    public void TwoDevicesWithSameValues_AreEqual()
+    public void AuthenticationType_ForPasswordCredential_IsPassword()
     {
         // given
-        var first = new Device(
-            "device123", "localhost", 2201, "device",
-            DeviceAuthenticationType.Password, 1);
-        var second = new Device(
-            "device123", "localhost", 2201, "device",
-            DeviceAuthenticationType.Password, 1);
+        var device = NewDevice(DeviceCredential.Password("pw"));
+
+        // when
+        var authenticationType = device.AuthenticationType;
 
         // then
-        Assert.Equal(first, second);
+        Assert.Equal(DeviceAuthenticationType.Password, authenticationType);
     }
 
     [Fact]
-    public void TwoDevicesWithDifferentVersions_AreNotEqual()
+    public void AuthenticationType_ForPrivateKeyCredential_IsPrivateKey()
     {
         // given
-        var first = new Device(
-            "device123", "localhost", 2201, "device",
-            DeviceAuthenticationType.Password, 1);
-        var second = new Device(
-            "device123", "localhost", 2201, "device",
-            DeviceAuthenticationType.Password, 2);
+        var device = NewDevice(DeviceCredential.PrivateKey("-----BEGIN KEY-----"));
+
+        // when
+        var authenticationType = device.AuthenticationType;
 
         // then
-        Assert.NotEqual(first, second);
+        Assert.Equal(DeviceAuthenticationType.PrivateKey, authenticationType);
     }
 
     [Fact]
-    public void TwoDevicesWithDifferentAuthenticationTypes_AreNotEqual()
+    public void GetPlaintext_RoundTripsTheSecret()
     {
         // given
-        var first = new Device(
-            "device123", "localhost", 2201, "device",
-            DeviceAuthenticationType.Password, 1);
-        var second = new Device(
-            "device123", "localhost", 2201, "device",
-            DeviceAuthenticationType.PrivateKey, 1);
+        const string secret = "super-secret-value";
+        var credential = DeviceCredential.Password(secret);
+
+        // when
+        var plaintext = credential.GetPlaintext();
 
         // then
-        Assert.NotEqual(first, second);
+        Assert.Equal(secret, plaintext);
+    }
+
+    [Fact]
+    public void ToString_DoesNotContainSecret()
+    {
+        // given
+        const string secret = "super-secret-value";
+        var credential = DeviceCredential.PrivateKey(secret);
+
+        // when
+        var text = credential.ToString();
+
+        // then
+        Assert.DoesNotContain(secret, text);
+    }
+
+    [Theory]
+    [InlineData("")]
+    [InlineData("   ")]
+    public void Factory_RejectsBlankPlaintext(string blank)
+    {
+        // given / when / then
+        Assert.Throws<ArgumentException>(() => DeviceCredential.Password(blank));
+    }
+
+    [Fact]
+    public void Factory_RejectsNullPlaintext()
+    {
+        // given / when / then
+        Assert.Throws<ArgumentNullException>(() => DeviceCredential.PrivateKey(null!));
     }
 }

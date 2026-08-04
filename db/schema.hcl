@@ -5,7 +5,13 @@ table "devices" {
   schema = schema.public
 
   column "id" {
-    type = text
+    type = bigint
+    identity {
+      generated = ALWAYS
+    }
+  }
+  column "name" {
+    type = varchar(64)
   }
   column "host" {
     type = text
@@ -27,21 +33,18 @@ table "devices" {
     type = bytea
     null = true
   }
-  column "version" {
-    type    = bigint
-    default = 1
-  }
   column "created_at" {
-    type    = timestamptz
-    default = sql("now()")
-  }
-  column "updated_at" {
     type    = timestamptz
     default = sql("now()")
   }
 
   primary_key {
     columns = [column.id]
+  }
+
+  index "ux_devices_name" {
+    unique  = true
+    columns = [column.name]
   }
 
   check "ck_devices_authentication_type" {

@@ -39,7 +39,7 @@ public sealed class HealthEndpointMappingsTests
     {
         // given
         await using var host = await HealthEndpointTestHost.StartAsync(
-            HealthCheckResult.Unhealthy("PostgreSQL unavailable."));
+            HealthCheckResult.Unhealthy("PostgresSQL unavailable."));
 
         // when
         using var response = await host.GetAsync("/health/live");
@@ -53,7 +53,7 @@ public sealed class HealthEndpointMappingsTests
     {
         // given
         await using var host = await HealthEndpointTestHost.StartAsync(
-            HealthCheckResult.Unhealthy("PostgreSQL unavailable."));
+            HealthCheckResult.Unhealthy("PostgresSQL unavailable."));
 
         // when
         using var response = await host.GetAsync("/health/ready");

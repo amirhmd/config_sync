@@ -7,11 +7,11 @@ namespace ConfigSync.Adapters.In.Rest;
 
 internal static class RestDependencyInjection
 {
-    internal static IServiceCollection AddRestAdapter(
-        this IServiceCollection services)
+    internal static IServiceCollection AddRestAdapter(this IServiceCollection services)
     {
         services.AddSingleton<IExecutionPlanMapper, ExecutionPlanMapper>();
         services.AddSingleton<IExecuteCommandEndpoint, ExecuteCommandEndpoint>();
+        services.AddSingleton<IDeviceMapper, DeviceMapper>();
 
         return services;
     }

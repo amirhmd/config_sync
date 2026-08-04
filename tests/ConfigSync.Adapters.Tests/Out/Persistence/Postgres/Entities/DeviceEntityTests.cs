@@ -16,29 +16,27 @@ public class DeviceEntityTests
         // when
         var given = new DeviceEntity
         {
-            Id = "device123",
+            Id = 42,
+            Name = "router_01",
             Host = "localhost",
             Port = 2201,
             Username = "device",
             AuthenticationType = "private_key",
             PasswordEncrypted = null,
             PrivateKeyEncrypted = privateKeyBytes,
-            Version = 1,
-            CreatedAt = createdAt,
-            UpdatedAt = createdAt
+            CreatedAt = createdAt
         };
 
         // then
-        Assert.Equal("device123", given.Id);
+        Assert.Equal(42, given.Id);
+        Assert.Equal("router_01", given.Name);
         Assert.Equal("localhost", given.Host);
         Assert.Equal(2201, given.Port);
         Assert.Equal("device", given.Username);
         Assert.Equal("private_key", given.AuthenticationType);
         Assert.Null(given.PasswordEncrypted);
         Assert.Equal(privateKeyBytes, given.PrivateKeyEncrypted);
-        Assert.Equal(1, given.Version);
         Assert.Equal(createdAt, given.CreatedAt);
-        Assert.Equal(createdAt, given.UpdatedAt);
     }
 
     [Fact]
@@ -51,22 +49,22 @@ public class DeviceEntityTests
         // when
         var given = new DeviceEntity
         {
-            Id = "device456",
+            Id = 7,
+            Name = "switch_core",
             Host = "10.0.0.1",
             Port = 22,
             Username = "admin",
             AuthenticationType = "password",
             PasswordEncrypted = passwordBytes,
             PrivateKeyEncrypted = null,
-            Version = 3,
-            CreatedAt = createdAt,
-            UpdatedAt = createdAt
+            CreatedAt = createdAt
         };
 
         // then
+        Assert.Equal(7, given.Id);
+        Assert.Equal("switch_core", given.Name);
         Assert.Equal("password", given.AuthenticationType);
         Assert.Equal(passwordBytes, given.PasswordEncrypted);
         Assert.Null(given.PrivateKeyEncrypted);
-        Assert.Equal(3, given.Version);
     }
 }

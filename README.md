@@ -32,6 +32,18 @@ Build:
 dotnet build
 ```
 
+> **Note:**
+> If you see the error below, Docker is not running or is not accessible through `/var/run/docker.sock`.
+>
+> Start Docker before running the tests, as the integration tests require it to verify the PostgreSQL health check and database connectivity.
+>
+> ```text
+> System.AggregateException: One or more errors occurred.
+> Failed to connect to Docker endpoint at 'unix:///var/run/docker.sock'.
+> System.Net.Http.HttpRequestException: Connection failed.
+> ```
+
+
 test:
 ```bash
 dotnet test --filter "Category!=Integration"
