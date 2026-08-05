@@ -6,15 +6,15 @@ namespace ConfigSync.Application.Ports.Out;
 
 /// <summary>
 /// Persistence of immutable device definitions. Devices are created and deleted, never updated.
+/// Credentials are stored and returned encrypted; decryption is an explicit, separate step.
 /// </summary>
 public interface IDevicePersistence
 {
     /// <summary>
-    /// Stores the device and its secret atomically. The secret is interpreted according to
-    /// <see cref="Device.AuthenticationType"/>.
+    /// Stores the device and its credential atomically.
     /// Returns <see cref="CreateOutcome.AlreadyExists"/> when the name is taken.
     /// </summary>
-    Task<CreateOutcome> InsertAsync(Device device, string secret, CancellationToken cancellationToken);
+    Task<CreateOutcome> InsertAsync(Device device, CancellationToken cancellationToken);
 
     /// <summary>
     /// Returns <c>null</c> when no device has the given name.
@@ -28,7 +28,7 @@ public interface IDevicePersistence
     Task<Page<Device>> GetPageAsync(string? cursor, int limit, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Removes the device and its secret.
+    /// Removes the device and its credential.
     /// Returns <see cref="DeleteOutcome.NotFound"/> when no device has the given name.
     /// </summary>
     Task<DeleteOutcome> DeleteAsync(string name, CancellationToken cancellationToken);

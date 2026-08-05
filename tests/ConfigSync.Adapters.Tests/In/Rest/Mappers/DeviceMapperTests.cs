@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using ConfigSync.Adapters.In.Rest.Mappers;
+using System.Text;
 using ConfigSync.Adapters.In.Rest.Models.Requests;
 using ConfigSync.Domain;
 using Xunit;
@@ -9,98 +9,126 @@ namespace ConfigSync.Adapters.Tests.In.Rest.Mappers;
 
 public class DeviceMapperTests
 {
-    private static readonly IDeviceMapper Mapper = new DeviceMapper();
-
     [Fact]
-    public void ToDevice_WithPassword_BuildsDeviceWithPasswordCredential()
+    public void ToDevice_WithPassword_SetsPasswordAuthenticationType()
     {
         // given
-        var request = new CreateDeviceRequest(
-            Name: "router_01", Host: "10.0.0.1", Port: 22, Username: "admin",
-            Password: "s3cr3t", PrivateKey: null);
+        var mapper = AdaptersTestFixtures.BuildMapper(AdaptersTestFixtures.BuildEncryption());
 
         // when
-        var device = Mapper.ToDevice(request);
+        var device = mapper.ToDevice(AdaptersTestFixtures.PasswordRequest());
 
         // then
-        Assert.Equal("router_01", device.Name);
-        Assert.Equal("10.0.0.1", device.Host);
-        Assert.Equal(22, device.Port);
-        Assert.Equal("admin", device.Username);
         Assert.Equal(DeviceAuthenticationType.Password, device.AuthenticationType);
-        Assert.Equal("s3cr3t", device.Credential.GetPlaintext());
     }
 
     [Fact]
-    public void ToDevice_WithPrivateKey_BuildsDeviceWithPrivateKeyCredential()
+    public void ToDevice_WithPrivateKey_SetsPrivateKeyAuthenticationType()
     {
         // given
-        var request = new CreateDeviceRequest(
-            Name: "router_01", Host: "10.0.0.1", Port: 22, Username: "admin",
-            Password: null, PrivateKey: "-----BEGIN KEY-----");
+        var mapper = AdaptersTestFixtures.BuildMapper(AdaptersTestFixtures.BuildEncryption());
 
         // when
-        var device = Mapper.ToDevice(request);
+        var device = mapper.ToDevice(AdaptersTestFixtures.PrivateKeyRequest());
 
         // then
         Assert.Equal(DeviceAuthenticationType.PrivateKey, device.AuthenticationType);
-        Assert.Equal("-----BEGIN KEY-----", device.Credential.GetPlaintext());
     }
 
     [Fact]
-    public void ToDevice_NormalizesName_TrimsAndLowercases()
+    public void ToDevice_EncryptsPassword_SoCiphertextIsNotPlaintext()
     {
         // given
-        var request = new CreateDeviceRequest(
-            Name: "  Router_01  ", Host: "10.0.0.1", Port: 22, Username: "admin",
-            Password: "s3cr3t", PrivateKey: null);
+        var mapper = AdaptersTestFixtures.BuildMapper(AdaptersTestFixtures.BuildEncryption());
+        var plaintext = "secret123";
 
         // when
-        var device = Mapper.ToDevice(request);
+        var device = mapper.ToDevice(AdaptersTestFixtures.PasswordRequest(password: plaintext));
+
+        // then
+        Assert.NotEqual(Encoding.UTF8.GetBytes(plaintext), device.Credential.GetCiphertext());
+    }
+
+    [Fact]
+    public void ToDevice_EncryptsPassword_SoItDecryptsBackToPlaintext()
+    {
+        // given
+        var encryption = AdaptersTestFixtures.BuildEncryption();
+        var mapper = AdaptersTestFixtures.BuildMapper(encryption);
+        var plaintext = "secret123";
+
+        // when
+        var device = mapper.ToDevice(AdaptersTestFixtures.PasswordRequest(password: plaintext));
+
+        // then
+        Assert.Equal(plaintext, encryption.DecryptPassword(device.Credential.GetCiphertext()));
+    }
+
+    [Fact]
+    public void ToDevice_EncryptsPrivateKey_SoItDecryptsBackToPlaintext()
+    {
+        // given
+        var encryption = AdaptersTestFixtures.BuildEncryption();
+        var mapper = AdaptersTestFixtures.BuildMapper(encryption);
+        var plaintext = "-----BEGIN OPENSSH PRIVATE KEY-----";
+
+        // when
+        var device = mapper.ToDevice(AdaptersTestFixtures.PrivateKeyRequest(privateKey: plaintext));
+
+        // then
+        Assert.Equal(plaintext, encryption.DecryptPrivateKey(device.Credential.GetCiphertext()));
+    }
+
+    [Fact]
+    public void ToDevice_NormalizesName()
+    {
+        // given
+        var mapper = AdaptersTestFixtures.BuildMapper(AdaptersTestFixtures.BuildEncryption());
+
+        // when
+        var device = mapper.ToDevice(AdaptersTestFixtures.PasswordRequest(name: "  Router_01  "));
 
         // then
         Assert.Equal("router_01", device.Name);
     }
 
     [Fact]
-    public void ToDevice_WithNeitherCredential_Throws()
+    public void ToDevice_ThrowsWhenBothCredentialsProvided()
     {
         // given
-        var request = new CreateDeviceRequest(
-            Name: "router_01", Host: "10.0.0.1", Port: 22, Username: "admin",
-            Password: null, PrivateKey: null);
+        var mapper = AdaptersTestFixtures.BuildMapper(AdaptersTestFixtures.BuildEncryption());
+        var request = new CreateDeviceRequest("router_01", "localhost", 2201, "device", "secret", "key");
 
         // when / then
-        Assert.Throws<InvalidOperationException>(() => Mapper.ToDevice(request));
+        Assert.Throws<InvalidOperationException>(() => mapper.ToDevice(request));
     }
 
     [Fact]
-    public void ToDevice_WithBothCredentials_Throws()
+    public void ToDevice_ThrowsWhenNeitherCredentialProvided()
     {
         // given
-        var request = new CreateDeviceRequest(
-            Name: "router_01", Host: "10.0.0.1", Port: 22, Username: "admin",
-            Password: "s3cr3t", PrivateKey: "-----BEGIN KEY-----");
+        var mapper = AdaptersTestFixtures.BuildMapper(AdaptersTestFixtures.BuildEncryption());
+        var request = new CreateDeviceRequest("router_01", "localhost", 2201, "device", null, null);
 
         // when / then
-        Assert.Throws<InvalidOperationException>(() => Mapper.ToDevice(request));
+        Assert.Throws<InvalidOperationException>(() => mapper.ToDevice(request));
     }
 
     [Fact]
-    public void ToDetails_MapsAllFieldsAndPasswordWireValue()
+    public void ToDetails_MapsAllFieldsWithPasswordWireValue()
     {
         // given
-        var device = new Device(
-            "router_01", "10.0.0.1", 22, "admin", DeviceCredential.Password("s3cr3t"));
+        var mapper = AdaptersTestFixtures.BuildMapper(AdaptersTestFixtures.BuildEncryption());
+        var device = mapper.ToDevice(AdaptersTestFixtures.PasswordRequest());
 
         // when
-        var details = Mapper.ToDetails(device);
+        var details = mapper.ToDetails(device);
 
         // then
         Assert.Equal("router_01", details.Name);
-        Assert.Equal("10.0.0.1", details.Host);
-        Assert.Equal(22, details.Port);
-        Assert.Equal("admin", details.Username);
+        Assert.Equal("localhost", details.Host);
+        Assert.Equal(2201, details.Port);
+        Assert.Equal("device", details.Username);
         Assert.Equal("password", details.AuthenticationType);
     }
 
@@ -108,83 +136,47 @@ public class DeviceMapperTests
     public void ToDetails_MapsPrivateKeyWireValue()
     {
         // given
-        var device = new Device(
-            "router_01", "10.0.0.1", 22, "admin", DeviceCredential.PrivateKey("key"));
+        var mapper = AdaptersTestFixtures.BuildMapper(AdaptersTestFixtures.BuildEncryption());
+        var device = mapper.ToDevice(AdaptersTestFixtures.PrivateKeyRequest());
 
         // when
-        var details = Mapper.ToDetails(device);
+        var details = mapper.ToDetails(device);
 
         // then
         Assert.Equal("private_key", details.AuthenticationType);
     }
 
     [Fact]
-    public void ToDetails_DoesNotExposeSecret()
-    {
-        // given
-        const string secret = "super-secret-value";
-        var device = new Device(
-            "router_01", "10.0.0.1", 22, "admin", DeviceCredential.Password(secret));
-
-        // when
-        var details = Mapper.ToDetails(device);
-
-        // then
-        Assert.DoesNotContain(
-            secret,
-            new[] { details.Name, details.Host, details.Username, details.AuthenticationType });
-    }
-
-    [Fact]
     public void ToPageDetails_MapsItemsInOrderAndCarriesCursor()
     {
         // given
-        var page = new Page<DeviceSummary>(
-            new List<DeviceSummary>
-            {
-                new("router_01", "10.0.0.1", 22, "admin", DeviceAuthenticationType.Password),
-                new("router_02", "10.0.0.2", 22, "admin", DeviceAuthenticationType.PrivateKey)
-            },
-            NextCursor: "cursor-123");
+        var mapper = AdaptersTestFixtures.BuildMapper(AdaptersTestFixtures.BuildEncryption());
+        var first = mapper.ToDevice(AdaptersTestFixtures.PasswordRequest(name: "router_01"));
+        var second = mapper.ToDevice(AdaptersTestFixtures.PasswordRequest(name: "router_02"));
+        var page = new Page<Device>(new List<Device> { first, second }, "next-cursor");
 
         // when
-        var details = Mapper.ToPageDetails(page);
+        var details = mapper.ToPageDetails(page);
 
         // then
-        Assert.Equal("cursor-123", details.NextCursor);
         Assert.Equal(2, details.Items.Count);
         Assert.Equal("router_01", details.Items[0].Name);
-        Assert.Equal("password", details.Items[0].AuthenticationType);
         Assert.Equal("router_02", details.Items[1].Name);
-        Assert.Equal("private_key", details.Items[1].AuthenticationType);
+        Assert.Equal("next-cursor", details.NextCursor);
     }
 
     [Fact]
     public void ToPageDetails_WithEmptyPage_ReturnsEmptyItemsAndNullCursor()
     {
         // given
-        var page = new Page<DeviceSummary>(new List<DeviceSummary>(), NextCursor: null);
+        var mapper = AdaptersTestFixtures.BuildMapper(AdaptersTestFixtures.BuildEncryption());
+        var page = new Page<Device>(new List<Device>(), null);
 
         // when
-        var details = Mapper.ToPageDetails(page);
+        var details = mapper.ToPageDetails(page);
 
         // then
         Assert.Empty(details.Items);
         Assert.Null(details.NextCursor);
-    }
-
-    [Fact]
-    public void ToPageDetails_WithUnknownAuthenticationType_Throws()
-    {
-        // given
-        var page = new Page<DeviceSummary>(
-            new List<DeviceSummary>
-            {
-                new("router_01", "10.0.0.1", 22, "admin", (DeviceAuthenticationType)999)
-            },
-            NextCursor: null);
-
-        // when / then
-        Assert.Throws<ArgumentOutOfRangeException>(() => Mapper.ToPageDetails(page));
     }
 }

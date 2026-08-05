@@ -7,7 +7,7 @@ namespace ConfigSync.Adapters.In.Rest.Mappers;
 public interface IDeviceMapper
 {
     /// <summary>
-    /// Builds a domain <see cref="Device"/> from a validated create request, resolving the
+    /// Builds a domain <see cref="Device"/> from a validated create request, encrypting the
     /// credential from whichever of password/private key is present. Throws when the request
     /// does not carry exactly one credential; validation is expected to prevent that.
     /// </summary>
@@ -15,5 +15,5 @@ public interface IDeviceMapper
 
     DeviceDetails ToDetails(Device device);
 
-    DevicePageDetails ToPageDetails(Page<DeviceSummary> page);
+    DevicePageDetails ToPageDetails(Page<Device> page);
 }

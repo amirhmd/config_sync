@@ -4,23 +4,30 @@ namespace ConfigSync.Domain;
 
 public sealed class DeviceCredential
 {
-    public static DeviceCredential Password(string plaintext) => new(DeviceAuthenticationType.Password, plaintext);
+    public static DeviceCredential Password(byte[] ciphertext) =>
+        new(DeviceAuthenticationType.Password, ciphertext);
 
-    public static DeviceCredential PrivateKey(string plaintext) => new(DeviceAuthenticationType.PrivateKey, plaintext);
+    public static DeviceCredential PrivateKey(byte[] ciphertext) =>
+        new(DeviceAuthenticationType.PrivateKey, ciphertext);
 
     public DeviceAuthenticationType AuthenticationType { get; }
 
-    public string GetPlaintext() => _plaintext;
+    public byte[] GetCiphertext() => _ciphertext;
 
     public override string ToString() => "***";
 
-    private readonly string _plaintext;
+    private readonly byte[] _ciphertext;
 
-    private DeviceCredential(DeviceAuthenticationType authenticationType, string plaintext)
+    private DeviceCredential(DeviceAuthenticationType authenticationType, byte[] ciphertext)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(plaintext);
+        ArgumentNullException.ThrowIfNull(ciphertext);
+
+        if (ciphertext.Length == 0)
+        {
+            throw new ArgumentException("Ciphertext cannot be empty.", nameof(ciphertext));
+        }
 
         AuthenticationType = authenticationType;
-        _plaintext = plaintext;
+        _ciphertext = ciphertext;
     }
 }

@@ -3,10 +3,11 @@ using System.Linq;
 using ConfigSync.Adapters.In.Rest.Models.Requests;
 using ConfigSync.Adapters.In.Rest.Models.Responses;
 using ConfigSync.Domain;
+using ConfigSync.Infrastructure.Credentials;
 
 namespace ConfigSync.Adapters.In.Rest.Mappers;
 
-public sealed class DeviceMapper : IDeviceMapper
+public sealed class DeviceMapper(IDeviceCredentialEncryption encryption) : IDeviceMapper
 {
     public Device ToDevice(CreateDeviceRequest request)
     {
@@ -52,23 +53,16 @@ public sealed class DeviceMapper : IDeviceMapper
             ToWireAuthenticationType(device.AuthenticationType));
     }
 
-    public DevicePageDetails ToPageDetails(Page<DeviceSummary> page)
+    public DevicePageDetails ToPageDetails(Page<Device> page)
     {
         ArgumentNullException.ThrowIfNull(page);
 
-        var items = page.Items
-            .Select(summary => new DeviceDetails(
-                summary.Name,
-                summary.Host,
-                summary.Port,
-                summary.Username,
-                ToWireAuthenticationType(summary.AuthenticationType)))
-            .ToList();
+        var items = page.Items.Select(ToDetails).ToList();
 
         return new DevicePageDetails(items, page.NextCursor);
     }
 
-    private static DeviceCredential CreateCredential(CreateDeviceRequest request)
+    private DeviceCredential CreateCredential(CreateDeviceRequest request)
     {
         var hasPassword = !string.IsNullOrWhiteSpace(request.Password);
         var hasPrivateKey = !string.IsNullOrWhiteSpace(request.PrivateKey);
@@ -80,10 +74,10 @@ public sealed class DeviceMapper : IDeviceMapper
 
         if (hasPassword)
         {
-            return DeviceCredential.Password(request.Password!);
+            return DeviceCredential.Password(encryption.EncryptPassword(request.Password!));
         }
 
-        return DeviceCredential.PrivateKey(request.PrivateKey!);
+        return DeviceCredential.PrivateKey(encryption.EncryptPrivateKey(request.PrivateKey!));
     }
 
     private static string ToWireAuthenticationType(DeviceAuthenticationType authenticationType)

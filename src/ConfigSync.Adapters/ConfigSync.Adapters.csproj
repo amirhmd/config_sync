@@ -2,10 +2,11 @@
     <ItemGroup>
         <!-- Adapters depends on Application ports -->
         <ProjectReference Include="../ConfigSync.Application/ConfigSync.Application.csproj" />
+        <!-- credential encryption for the REST mapper -->
+        <ProjectReference Include="../ConfigSync.Infrastructure/ConfigSync.Infrastructure.csproj" />
     </ItemGroup>
     <ItemGroup>
         <!-- access to ASP.NET Core types without making project runnable -->
-        <!-- transitively provides Microsoft.Extensions.Logging.Abstractions, DependencyInjection.Abstractions, etc. -->
         <FrameworkReference Include="Microsoft.AspNetCore.App" />
     </ItemGroup>
     <ItemGroup>
