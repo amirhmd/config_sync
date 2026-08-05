@@ -34,7 +34,7 @@ public sealed class DeviceMapper(IDeviceCredentialEncryption encryption) : IDevi
         }
 
         return new Device(
-            DeviceName.Normalize(request.Name),
+            request.Name,
             request.Host,
             request.Port.Value,
             request.Username,

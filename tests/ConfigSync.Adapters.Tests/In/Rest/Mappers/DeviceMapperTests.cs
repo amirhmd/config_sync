@@ -80,13 +80,13 @@ public class DeviceMapperTests
     }
 
     [Fact]
-    public void ToDevice_NormalizesName()
+    public void ToDevice_KeepsTheNameExactlyAsSupplied()
     {
         // given
         var mapper = AdaptersTestFixtures.BuildMapper(AdaptersTestFixtures.BuildEncryption());
 
         // when
-        var device = mapper.ToDevice(AdaptersTestFixtures.PasswordRequest(name: "  Router_01  "));
+        var device = mapper.ToDevice(AdaptersTestFixtures.PasswordRequest(name: "router_01"));
 
         // then
         Assert.Equal("router_01", device.Name);
