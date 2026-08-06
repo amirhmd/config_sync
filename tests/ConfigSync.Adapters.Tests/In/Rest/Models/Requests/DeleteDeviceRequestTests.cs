@@ -14,14 +14,4 @@ public class DeleteDeviceRequestTests
         // then
         Assert.Equal("router_01", request.Name);
     }
-
-    [Fact]
-    public void Construction_AllowsAnAbsentName()
-    {
-        // given / when
-        var request = new DeleteDeviceRequest(null);
-
-        // then
-        Assert.Null(request.Name);
-    }
 }

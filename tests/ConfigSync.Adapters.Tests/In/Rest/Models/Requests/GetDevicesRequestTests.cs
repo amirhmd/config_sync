@@ -25,14 +25,4 @@ public class GetDevicesRequestTests
         // then
         Assert.Null(request.Cursor);
     }
-
-    [Fact]
-    public void Construction_AllowsAnAbsentLimitSoValidationCanRejectIt()
-    {
-        // given / when
-        var request = new GetDevicesRequest(null, null);
-
-        // then
-        Assert.Null(request.Limit);
-    }
 }

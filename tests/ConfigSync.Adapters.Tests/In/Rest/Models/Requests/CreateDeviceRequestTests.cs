@@ -22,17 +22,14 @@ public class CreateDeviceRequestTests
     }
 
     [Fact]
-    public void Construction_AllowsEveryFieldToBeAbsent()
+    public void Construction_CarriesAPrivateKeyInsteadOfAPassword()
     {
-        // given / when — absent fields reach validation as null rather than failing to bind
-        var request = new CreateDeviceRequest(null, null, null, null, null, null);
+        // given / when
+        var request = new CreateDeviceRequest(
+            "router_01", "localhost", 2201, "device", null, "-----BEGIN KEY-----");
 
         // then
-        Assert.Null(request.Name);
-        Assert.Null(request.Host);
-        Assert.Null(request.Port);
-        Assert.Null(request.Username);
         Assert.Null(request.Password);
-        Assert.Null(request.PrivateKey);
+        Assert.Equal("-----BEGIN KEY-----", request.PrivateKey);
     }
 }

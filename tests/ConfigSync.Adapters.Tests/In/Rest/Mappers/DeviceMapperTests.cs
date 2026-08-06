@@ -93,17 +93,6 @@ public class DeviceMapperTests
     }
 
     [Fact]
-    public void ToDevice_ThrowsWhenBothCredentialsProvided()
-    {
-        // given
-        var mapper = AdaptersTestConfiguration.BuildMapper(AdaptersTestConfiguration.BuildEncryption());
-        var request = new CreateDeviceRequest("router_01", "localhost", 2201, "device", "secret", "key");
-
-        // when / then
-        Assert.Throws<InvalidOperationException>(() => mapper.ToDevice(request));
-    }
-
-    [Fact]
     public void ToDevice_ThrowsWhenNeitherCredentialProvided()
     {
         // given

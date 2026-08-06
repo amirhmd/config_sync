@@ -58,18 +58,19 @@ public class RequestValidationTests
     }
 
     [Fact]
-    public void Validate_CreateDeviceRequest_ReportsEveryMissingFieldIndependently()
+    public void Validate_CreateDeviceRequest_RejectsBothCredentials()
     {
         // given
         var validation = BuildValidation();
-        var request = new CreateDeviceRequest(null, null, null, null, null, null);
+        var request = new CreateDeviceRequest(
+            "router_01", "localhost", 2201, "device", "secret123", "-----BEGIN KEY-----");
 
         // when
         var errorDetails = validation.Validate(request);
 
         // then
         Assert.NotNull(errorDetails);
-        Assert.Equal(5, errorDetails.Errors.Count);
+        Assert.Equal("credential", Assert.Single(errorDetails.Errors).PropertyName);
     }
 
     [Fact]
@@ -127,13 +128,13 @@ public class RequestValidationTests
     }
 
     [Fact]
-    public void Validate_GetDevicesRequest_RejectsAMissingLimit()
+    public void Validate_GetDevicesRequest_RejectsALimitOutOfRange()
     {
         // given
         var validation = BuildValidation();
 
         // when
-        var errorDetails = validation.Validate(new GetDevicesRequest(null, null));
+        var errorDetails = validation.Validate(new GetDevicesRequest(null, 101));
 
         // then
         Assert.NotNull(errorDetails);

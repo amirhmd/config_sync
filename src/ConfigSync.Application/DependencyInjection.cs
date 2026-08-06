@@ -9,6 +9,7 @@ public static class DependencyInjection
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
         services.AddSingleton<IExecuteCommandUseCase, ExecuteCommandService>();
+        services.AddSingleton<IDeviceUseCase, DeviceService>();
         return services;
     }
 }

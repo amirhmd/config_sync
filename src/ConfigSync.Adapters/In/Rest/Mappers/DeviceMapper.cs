@@ -11,40 +11,16 @@ public sealed class DeviceMapper(IDeviceCredentialEncryption encryption) : IDevi
 {
     public Device ToDevice(CreateDeviceRequest request)
     {
-        ArgumentNullException.ThrowIfNull(request);
-
-        if (string.IsNullOrWhiteSpace(request.Name))
-        {
-            throw new InvalidOperationException("Device name is required.");
-        }
-
-        if (string.IsNullOrWhiteSpace(request.Host))
-        {
-            throw new InvalidOperationException("Device host is required.");
-        }
-
-        if (request.Port is null)
-        {
-            throw new InvalidOperationException("Device port is required.");
-        }
-
-        if (string.IsNullOrWhiteSpace(request.Username))
-        {
-            throw new InvalidOperationException("Device username is required.");
-        }
-
         return new Device(
             request.Name,
             request.Host,
-            request.Port.Value,
+            request.Port,
             request.Username,
             CreateCredential(request));
     }
 
     public DeviceDetails ToDetails(Device device)
     {
-        ArgumentNullException.ThrowIfNull(device);
-
         return new DeviceDetails(
             device.Name,
             device.Host,
@@ -55,29 +31,54 @@ public sealed class DeviceMapper(IDeviceCredentialEncryption encryption) : IDevi
 
     public DevicePageDetails ToPageDetails(Page<Device> page)
     {
-        ArgumentNullException.ThrowIfNull(page);
-
         var items = page.Items.Select(ToDetails).ToList();
 
         return new DevicePageDetails(items, page.NextCursor);
     }
 
+    public CreateDeviceOutcome ToCreateOutcome(CreateOutcome outcome)
+    {
+        if (outcome == CreateOutcome.Created)
+        {
+            return CreateDeviceOutcome.Created;
+        }
+
+        if (outcome == CreateOutcome.AlreadyExists)
+        {
+            return CreateDeviceOutcome.AlreadyExists;
+        }
+
+        throw new ArgumentOutOfRangeException(nameof(outcome), outcome.Value, "Unsupported create outcome.");
+    }
+
+    public DeleteDeviceOutcome ToDeleteOutcome(DeleteOutcome outcome)
+    {
+        if (outcome == DeleteOutcome.Deleted)
+        {
+            return DeleteDeviceOutcome.Deleted;
+        }
+
+        if (outcome == DeleteOutcome.NotFound)
+        {
+            return DeleteDeviceOutcome.NotFound;
+        }
+
+        throw new ArgumentOutOfRangeException(nameof(outcome), outcome.Value, "Unsupported delete outcome.");
+    }
+
     private DeviceCredential CreateCredential(CreateDeviceRequest request)
     {
-        var hasPassword = !string.IsNullOrWhiteSpace(request.Password);
-        var hasPrivateKey = !string.IsNullOrWhiteSpace(request.PrivateKey);
-
-        if (hasPassword == hasPrivateKey)
+        if (request.Password is not null)
         {
-            throw new InvalidOperationException("Exactly one credential must be provided.");
+            return DeviceCredential.Password(encryption.EncryptPassword(request.Password));
         }
 
-        if (hasPassword)
+        if (request.PrivateKey is not null)
         {
-            return DeviceCredential.Password(encryption.EncryptPassword(request.Password!));
+            return DeviceCredential.PrivateKey(encryption.EncryptPrivateKey(request.PrivateKey));
         }
 
-        return DeviceCredential.PrivateKey(encryption.EncryptPrivateKey(request.PrivateKey!));
+        throw new InvalidOperationException("Exactly one credential must be provided.");
     }
 
     private static string ToWireAuthenticationType(DeviceAuthenticationType authenticationType)

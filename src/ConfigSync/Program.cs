@@ -26,17 +26,17 @@ public class Program
         builder.Host.UseSerilog((_, config) =>
             config.WriteTo.Console());
 
-        builder.Services.AddOpenTelemetry()
-            .ConfigureResource(resource => resource.AddService(serviceName: "ConfigSync"))
-            .WithTracing(tracing => tracing
-                .AddAspNetCoreInstrumentation()
-                .AddConsoleExporter())
-            .WithMetrics(metrics => metrics
-                .AddMeter("ConfigSync.Application")
-                .AddConsoleExporter((_, metricReaderOptions) =>
-                {
-                    metricReaderOptions.PeriodicExportingMetricReaderOptions.ExportIntervalMilliseconds = 6000_000;
-                }));
+        // builder.Services.AddOpenTelemetry()
+        //     .ConfigureResource(resource => resource.AddService(serviceName: "ConfigSync"))
+        //     .WithTracing(tracing => tracing
+        //         .AddAspNetCoreInstrumentation()
+        //         .AddConsoleExporter())
+        //     .WithMetrics(metrics => metrics
+        //         .AddMeter("ConfigSync.Application")
+        //         .AddConsoleExporter((_, metricReaderOptions) =>
+        //         {
+        //             metricReaderOptions.PeriodicExportingMetricReaderOptions.ExportIntervalMilliseconds = 6000_000;
+        //         }));
         
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen(options =>

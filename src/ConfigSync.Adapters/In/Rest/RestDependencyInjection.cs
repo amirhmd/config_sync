@@ -14,6 +14,7 @@ internal static class RestDependencyInjection
         services.AddSingleton<IExecuteCommandEndpoint, ExecuteCommandEndpoint>();
 
         services.AddSingleton<IDeviceMapper, DeviceMapper>();
+        services.AddSingleton<IDeviceEndpoint, DeviceEndpoint>();
 
         services.AddSingleton<NameValidation>();
         services.AddSingleton<HostValidation>();
