@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using ConfigSync.Adapters.In.Rest.Models.Requests;
+using ConfigSync.Adapters.In.Rest.Models.Responses;
 using ConfigSync.Domain;
 using Xunit;
 
@@ -167,5 +168,57 @@ public class DeviceMapperTests
         // then
         Assert.Empty(details.Items);
         Assert.Null(details.NextCursor);
+    }
+    
+    [Fact]
+    public void ToCreateOutcome_MapsCreated()
+    {
+        // given
+        var mapper = AdaptersTestConfiguration.BuildMapper(AdaptersTestConfiguration.BuildEncryption());
+
+        // when
+        var outcome = mapper.ToCreateOutcome(CreateOutcome.Created);
+
+        // then
+        Assert.Equal(CreateDeviceOutcome.Created, outcome);
+    }
+
+    [Fact]
+    public void ToCreateOutcome_MapsAlreadyExists()
+    {
+        // given
+        var mapper = AdaptersTestConfiguration.BuildMapper(AdaptersTestConfiguration.BuildEncryption());
+
+        // when
+        var outcome = mapper.ToCreateOutcome(CreateOutcome.AlreadyExists);
+
+        // then
+        Assert.Equal(CreateDeviceOutcome.AlreadyExists, outcome);
+    }
+
+    [Fact]
+    public void ToDeleteOutcome_MapsDeleted()
+    {
+        // given
+        var mapper = AdaptersTestConfiguration.BuildMapper(AdaptersTestConfiguration.BuildEncryption());
+
+        // when
+        var outcome = mapper.ToDeleteOutcome(DeleteOutcome.Deleted);
+
+        // then
+        Assert.Equal(DeleteDeviceOutcome.Deleted, outcome);
+    }
+
+    [Fact]
+    public void ToDeleteOutcome_MapsNotFound()
+    {
+        // given
+        var mapper = AdaptersTestConfiguration.BuildMapper(AdaptersTestConfiguration.BuildEncryption());
+
+        // when
+        var outcome = mapper.ToDeleteOutcome(DeleteOutcome.NotFound);
+
+        // then
+        Assert.Equal(DeleteDeviceOutcome.NotFound, outcome);
     }
 }

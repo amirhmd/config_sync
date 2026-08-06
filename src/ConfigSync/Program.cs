@@ -9,9 +9,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi;
-using OpenTelemetry.Metrics;
-using OpenTelemetry.Resources;
-using OpenTelemetry.Trace;
 using Serilog;
 
 namespace ConfigSync;
@@ -26,18 +23,6 @@ public class Program
         builder.Host.UseSerilog((_, config) =>
             config.WriteTo.Console());
 
-        // builder.Services.AddOpenTelemetry()
-        //     .ConfigureResource(resource => resource.AddService(serviceName: "ConfigSync"))
-        //     .WithTracing(tracing => tracing
-        //         .AddAspNetCoreInstrumentation()
-        //         .AddConsoleExporter())
-        //     .WithMetrics(metrics => metrics
-        //         .AddMeter("ConfigSync.Application")
-        //         .AddConsoleExporter((_, metricReaderOptions) =>
-        //         {
-        //             metricReaderOptions.PeriodicExportingMetricReaderOptions.ExportIntervalMilliseconds = 6000_000;
-        //         }));
-        
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen(options =>
         {
@@ -49,6 +34,9 @@ public class Program
             });
         });
         
+        builder.Services.AddProblemDetails();
+        builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+        
         // Infrastructure first: registers NpgsqlDataSource, IDeviceCredentialEncryption, and Data Protection
         // Adapters resolve them later from the container.
         builder.Services.AddInfrastructure(builder.Configuration);
@@ -57,6 +45,7 @@ public class Program
 
         WebApplication app = builder.Build();
         
+        app.UseExceptionHandler();
         app.UseSwagger();
         app.UseSwaggerUI(options =>
         {

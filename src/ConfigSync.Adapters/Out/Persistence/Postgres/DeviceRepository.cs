@@ -5,7 +5,7 @@ using ConfigSync.Domain;
 
 namespace ConfigSync.Adapters.Out.Persistence.Postgres;
 
-public class DeviceRepository : IDevicePersistence
+internal sealed class DeviceRepository : IDevicePersistence
 {
     public Task<CreateOutcome> InsertAsync(Device device, CancellationToken cancellationToken)
     {

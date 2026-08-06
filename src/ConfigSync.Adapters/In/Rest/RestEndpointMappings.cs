@@ -26,12 +26,12 @@ public static class RestEndpointMappings
 
         devices.MapGet("", GetDevices)
             .WithName("GetDevices")
-            .Produces<GetDevicesResponse>() // default 200
+            .Produces<GetDevicesResponse>()
             .Produces<GetDevicesResponse>(StatusCodes.Status400BadRequest);
 
         devices.MapGet("/{name}", GetDevice)
             .WithName("GetDevice")
-            .Produces<GetDeviceResponse>() // default 200
+            .Produces<GetDeviceResponse>()
             .Produces<GetDeviceResponse>(StatusCodes.Status400BadRequest)
             .Produces<GetDeviceResponse>(StatusCodes.Status404NotFound);
 
@@ -68,12 +68,13 @@ public static class RestEndpointMappings
             return Results.BadRequest(response);
         }
 
-        if (response.Outcome == CreateDeviceOutcome.AlreadyExists)
+        // Only the Created factory carries a device; AlreadyExists leaves it absent.
+        if (response.Device is null)
         {
             return Results.Conflict(response);
         }
 
-        string location = $"{Uris.Devices}/{Uri.EscapeDataString(response.Device!.Name)}";
+        string location = $"{Uris.Devices}/{Uri.EscapeDataString(response.Device.Name)}";
 
         return Results.Created(location, response);
     }

@@ -9,10 +9,11 @@
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" />
     <PackageReference Include="Serilog.AspNetCore" />
-    <PackageReference Include="OpenTelemetry.Extensions.Hosting" />
-    <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" />
-    <PackageReference Include="OpenTelemetry.Exporter.Console" />
     <PackageReference Include="Swashbuckle.AspNetCore" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- to access internal class for testing -->
+    <InternalsVisibleTo Include="ConfigSync.Tests" />
   </ItemGroup>
   <PropertyGroup>
     <OutputType>Exe</OutputType>

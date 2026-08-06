@@ -1,11 +1,9 @@
 using System;
 using System.Collections.Immutable;
-using System.Diagnostics.Metrics;
 using System.Threading.Tasks;
 using ConfigSync.Application.Ports.In;
 using ConfigSync.Application.Services;
 using ConfigSync.Domain;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
 
@@ -17,12 +15,7 @@ public class ExecuteCommandServiceTests
     public async Task Execute_ReturnsANonEmptyReferenceId()
     {
         // given
-        var meterFactory = new ServiceCollection()
-            .AddMetrics()
-            .BuildServiceProvider()
-            .GetRequiredService<IMeterFactory>();
-        IExecuteCommandUseCase given = new ExecuteCommandService(
-            NullLogger<ExecuteCommandService>.Instance, meterFactory);
+        IExecuteCommandUseCase given = new ExecuteCommandService(NullLogger<ExecuteCommandService>.Instance);
         var plan = new ExecutionPlan(
             Commands: ImmutableList.Create("show version"),
             DeviceIds: ImmutableList.Create("device123"));

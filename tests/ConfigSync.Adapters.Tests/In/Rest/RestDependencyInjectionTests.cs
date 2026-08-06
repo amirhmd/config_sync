@@ -15,7 +15,6 @@ public class RestDependencyInjectionTests
         // given
         var services = new ServiceCollection();
         services.AddLogging();
-        services.AddMetrics();
         services.AddApplication();
         services.AddAdapters();
         var provider = services.BuildServiceProvider();
@@ -34,7 +33,6 @@ public class RestDependencyInjectionTests
         // given
         var services = new ServiceCollection();
         services.AddLogging();
-        services.AddMetrics();
         services.AddApplication();
         services.AddAdapters();
         var provider = services.BuildServiceProvider();
@@ -53,7 +51,6 @@ public class RestDependencyInjectionTests
         // given
         var services = new ServiceCollection();
         services.AddLogging();
-        services.AddMetrics();
         services.AddSingleton(AdaptersTestConfiguration.BuildEncryption());
         services.AddApplication();
         services.AddAdapters();
@@ -73,7 +70,6 @@ public class RestDependencyInjectionTests
         // given
         var services = new ServiceCollection();
         services.AddLogging();
-        services.AddMetrics();
         services.AddApplication();
         services.AddAdapters();
         var provider = services.BuildServiceProvider();
@@ -92,7 +88,6 @@ public class RestDependencyInjectionTests
         // given
         var services = new ServiceCollection();
         services.AddLogging();
-        services.AddMetrics();
         services.AddApplication();
         services.AddAdapters();
         var provider = services.BuildServiceProvider();
