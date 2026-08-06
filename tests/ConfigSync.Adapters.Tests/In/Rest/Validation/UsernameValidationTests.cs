@@ -1,22 +1,18 @@
-using ConfigSync.Adapters.In.Rest.Models.Requests;
 using ConfigSync.Adapters.In.Rest.Validation;
 using Xunit;
 
 namespace ConfigSync.Adapters.Tests.In.Rest.Validation;
 
-public class DeviceUsernameValidationTests
+public class UsernameValidationTests
 {
-    private static CreateDeviceRequest RequestWithUsername(string? username) =>
-        new("router_01", "localhost", 2201, username, "secret123", null);
-
     [Fact]
     public void Validate_AcceptsAUsername()
     {
         // given
-        var validation = new DeviceUsernameValidation();
+        var validation = new UsernameValidation();
 
         // when
-        var result = validation.Validate(RequestWithUsername("admin"));
+        var result = validation.Validate("admin");
 
         // then
         Assert.True(result.IsValid);
@@ -26,10 +22,10 @@ public class DeviceUsernameValidationTests
     public void Validate_RejectsMissingUsername()
     {
         // given
-        var validation = new DeviceUsernameValidation();
+        var validation = new UsernameValidation();
 
         // when
-        var result = validation.Validate(RequestWithUsername("   "));
+        var result = validation.Validate("   ");
 
         // then
         Assert.False(result.IsValid);
@@ -40,10 +36,10 @@ public class DeviceUsernameValidationTests
     public void Validate_RejectsUsernameLongerThan64Characters()
     {
         // given
-        var validation = new DeviceUsernameValidation();
+        var validation = new UsernameValidation();
 
         // when
-        var result = validation.Validate(RequestWithUsername(new string('a', 65)));
+        var result = validation.Validate(new string('a', 65));
 
         // then
         Assert.False(result.IsValid);

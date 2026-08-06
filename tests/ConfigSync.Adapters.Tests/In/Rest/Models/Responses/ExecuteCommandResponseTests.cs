@@ -1,8 +1,8 @@
 using System;
-using ConfigSync.Adapters.In.Rest.Models;
+using ConfigSync.Adapters.In.Rest.Models.Responses;
 using Xunit;
 
-namespace ConfigSync.Adapters.Tests.In.Rest.Models;
+namespace ConfigSync.Adapters.Tests.In.Rest.Models.Responses;
 
 public class ExecuteCommandResponseTests
 {

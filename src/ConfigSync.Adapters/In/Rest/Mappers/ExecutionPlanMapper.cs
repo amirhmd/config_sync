@@ -1,5 +1,5 @@
 using System.Collections.Immutable;
-using ConfigSync.Adapters.In.Rest.Models;
+using ConfigSync.Adapters.In.Rest.Models.Requests;
 using ConfigSync.Domain;
 
 namespace ConfigSync.Adapters.In.Rest.Mappers;

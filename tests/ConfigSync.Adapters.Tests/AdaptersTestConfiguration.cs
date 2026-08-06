@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace ConfigSync.Adapters.Tests;
 
-internal static class AdaptersTestFixtures
+internal static class AdaptersTestConfiguration
 {
     internal static IDeviceCredentialEncryption BuildEncryption()
     {

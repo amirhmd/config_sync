@@ -1,5 +1,5 @@
 using ConfigSync.Adapters.In.Rest.Mappers;
-using ConfigSync.Adapters.In.Rest.Models;
+using ConfigSync.Adapters.In.Rest.Models.Requests;
 using Xunit;
 
 namespace ConfigSync.Adapters.Tests.In.Rest.Mappers;

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace ConfigSync.Adapters.In.Rest.Models;
+namespace ConfigSync.Adapters.In.Rest.Models.Requests;
 
 public class ExecuteCommandRequest
 {

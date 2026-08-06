@@ -3,7 +3,7 @@ using Xunit;
 
 namespace ConfigSync.Adapters.Tests.In.Rest.Validation;
 
-public class DeviceNameValidationTests
+public class NameValidationTests
 {
     [Theory]
     [InlineData("router_01")]
@@ -13,11 +13,10 @@ public class DeviceNameValidationTests
     public void Validate_AcceptsWellFormedNames(string name)
     {
         // given
-        var validation = new DeviceNameValidation();
-        var request = AdaptersTestFixtures.PasswordRequest(name: name);
+        var validation = new NameValidation();
 
         // when
-        var result = validation.Validate(request);
+        var result = validation.Validate(name);
 
         // then
         Assert.True(result.IsValid);
@@ -29,11 +28,10 @@ public class DeviceNameValidationTests
     public void Validate_RejectsUppercaseNames(string name)
     {
         // given
-        var validation = new DeviceNameValidation();
-        var request = AdaptersTestFixtures.PasswordRequest(name: name);
+        var validation = new NameValidation();
 
         // when
-        var result = validation.Validate(request);
+        var result = validation.Validate(name);
 
         // then
         Assert.False(result.IsValid);
@@ -48,15 +46,13 @@ public class DeviceNameValidationTests
     public void Validate_RejectsNamesCarryingWhitespace(string name)
     {
         // given
-        var validation = new DeviceNameValidation();
-        var request = AdaptersTestFixtures.PasswordRequest(name: name);
+        var validation = new NameValidation();
 
         // when
-        var result = validation.Validate(request);
+        var result = validation.Validate(name);
 
         // then
         Assert.False(result.IsValid);
-        Assert.Equal("name", Assert.Single(result.Errors).PropertyName);
     }
 
     [Theory]
@@ -67,26 +63,23 @@ public class DeviceNameValidationTests
     public void Validate_RejectsMalformedNames(string name)
     {
         // given
-        var validation = new DeviceNameValidation();
-        var request = AdaptersTestFixtures.PasswordRequest(name: name);
+        var validation = new NameValidation();
 
         // when
-        var result = validation.Validate(request);
+        var result = validation.Validate(name);
 
         // then
         Assert.False(result.IsValid);
-        Assert.Equal("name", Assert.Single(result.Errors).PropertyName);
     }
 
     [Fact]
     public void Validate_RejectsMissingName()
     {
         // given
-        var validation = new DeviceNameValidation();
-        var request = AdaptersTestFixtures.PasswordRequest(name: "   ");
+        var validation = new NameValidation();
 
         // when
-        var result = validation.Validate(request);
+        var result = validation.Validate(null);
 
         // then
         Assert.False(result.IsValid);
@@ -96,13 +89,25 @@ public class DeviceNameValidationTests
     public void Validate_RejectsNameLongerThan64Characters()
     {
         // given
-        var validation = new DeviceNameValidation();
-        var request = AdaptersTestFixtures.PasswordRequest(name: new string('a', 65));
+        var validation = new NameValidation();
 
         // when
-        var result = validation.Validate(request);
+        var result = validation.Validate(new string('a', 65));
 
         // then
         Assert.False(result.IsValid);
+    }
+
+    [Fact]
+    public void Validate_ReportsOnlyOneErrorPerName()
+    {
+        // given
+        var validation = new NameValidation();
+
+        // when
+        var result = validation.Validate("Router 01!");
+
+        // then
+        Assert.Single(result.Errors);
     }
 }

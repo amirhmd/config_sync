@@ -1,14 +1,14 @@
-using ConfigSync.Adapters.In.Rest.Models;
+using ConfigSync.Adapters.In.Rest.Models.Requests;
 using Xunit;
 
-namespace ConfigSync.Adapters.Tests.In.Rest.Models;
+namespace ConfigSync.Adapters.Tests.In.Rest.Models.Requests;
 
 public class ExecuteCommandRequestTests
 {
     [Fact]
     public void Construction_SetsCommandsAndDeviceIds()
     {
-        // given
+        // given / when
         var given = new ExecuteCommandRequest
         {
             Commands = ["show version"],
@@ -23,7 +23,7 @@ public class ExecuteCommandRequestTests
     [Fact]
     public void Construction_DefaultsToEmptyLists()
     {
-        // given
+        // given / when
         var given = new ExecuteCommandRequest();
 
         // then

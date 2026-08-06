@@ -1,14 +1,10 @@
-using ConfigSync.Adapters.In.Rest.Models.Requests;
 using ConfigSync.Adapters.In.Rest.Validation;
 using Xunit;
 
 namespace ConfigSync.Adapters.Tests.In.Rest.Validation;
 
-public class PageLimitValidationTests
+public class LimitValidationTests
 {
-    private static GetDevicesRequest RequestWithLimit(int? limit) =>
-        new(null, limit);
-
     [Theory]
     [InlineData(1)]
     [InlineData(50)]
@@ -16,10 +12,10 @@ public class PageLimitValidationTests
     public void Validate_AcceptsLimitsInRange(int limit)
     {
         // given
-        var validation = new PageLimitValidation();
+        var validation = new LimitValidation();
 
         // when
-        var result = validation.Validate(RequestWithLimit(limit));
+        var result = validation.Validate(limit);
 
         // then
         Assert.True(result.IsValid);
@@ -32,10 +28,10 @@ public class PageLimitValidationTests
     public void Validate_RejectsLimitsOutOfRange(int limit)
     {
         // given
-        var validation = new PageLimitValidation();
+        var validation = new LimitValidation();
 
         // when
-        var result = validation.Validate(RequestWithLimit(limit));
+        var result = validation.Validate(limit);
 
         // then
         Assert.False(result.IsValid);
@@ -46,13 +42,12 @@ public class PageLimitValidationTests
     public void Validate_RejectsMissingLimit()
     {
         // given
-        var validation = new PageLimitValidation();
+        var validation = new LimitValidation();
 
         // when
-        var result = validation.Validate(RequestWithLimit(null));
+        var result = validation.Validate(null);
 
         // then
         Assert.False(result.IsValid);
-        Assert.Equal("limit", Assert.Single(result.Errors).PropertyName);
     }
 }

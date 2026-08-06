@@ -1,14 +1,10 @@
-using ConfigSync.Adapters.In.Rest.Models.Requests;
 using ConfigSync.Adapters.In.Rest.Validation;
 using Xunit;
 
 namespace ConfigSync.Adapters.Tests.In.Rest.Validation;
 
-public class DevicePortValidationTests
+public class PortValidationTests
 {
-    private static CreateDeviceRequest RequestWithPort(int? port) =>
-        new("router_01", "localhost", port, "device", "secret123", null);
-
     [Theory]
     [InlineData(1)]
     [InlineData(22)]
@@ -16,10 +12,10 @@ public class DevicePortValidationTests
     public void Validate_AcceptsPortsInRange(int port)
     {
         // given
-        var validation = new DevicePortValidation();
+        var validation = new PortValidation();
 
         // when
-        var result = validation.Validate(RequestWithPort(port));
+        var result = validation.Validate(port);
 
         // then
         Assert.True(result.IsValid);
@@ -32,10 +28,10 @@ public class DevicePortValidationTests
     public void Validate_RejectsPortsOutOfRange(int port)
     {
         // given
-        var validation = new DevicePortValidation();
+        var validation = new PortValidation();
 
         // when
-        var result = validation.Validate(RequestWithPort(port));
+        var result = validation.Validate(port);
 
         // then
         Assert.False(result.IsValid);
@@ -46,10 +42,10 @@ public class DevicePortValidationTests
     public void Validate_RejectsMissingPort()
     {
         // given
-        var validation = new DevicePortValidation();
+        var validation = new PortValidation();
 
         // when
-        var result = validation.Validate(RequestWithPort(null));
+        var result = validation.Validate(null);
 
         // then
         Assert.False(result.IsValid);

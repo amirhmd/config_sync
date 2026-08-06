@@ -1,8 +1,5 @@
-using System.Collections.Generic;
-using System.Linq;
 using ConfigSync.Adapters.In.Rest.Api;
 using ConfigSync.Adapters.In.Rest.Mappers;
-using ConfigSync.Adapters.In.Rest.Models.Requests;
 using ConfigSync.Adapters.In.Rest.Validation;
 using ConfigSync.Application;
 using Microsoft.Extensions.DependencyInjection;
@@ -57,7 +54,7 @@ public class RestDependencyInjectionTests
         var services = new ServiceCollection();
         services.AddLogging();
         services.AddMetrics();
-        services.AddSingleton(AdaptersTestFixtures.BuildEncryption());
+        services.AddSingleton(AdaptersTestConfiguration.BuildEncryption());
         services.AddApplication();
         services.AddAdapters();
         var provider = services.BuildServiceProvider();
@@ -71,7 +68,7 @@ public class RestDependencyInjectionTests
     }
 
     [Fact]
-    public void AddAdapters_RegistersEveryCreateDeviceValidation()
+    public void AddAdapters_RegistersRequestValidationAsSingleton()
     {
         // given
         var services = new ServiceCollection();
@@ -82,20 +79,15 @@ public class RestDependencyInjectionTests
         var provider = services.BuildServiceProvider();
 
         // when
-        var validations = provider
-            .GetRequiredService<IEnumerable<IValidation<CreateDeviceRequest>>>()
-            .ToList();
+        var first = provider.GetRequiredService<RequestValidation>();
+        var second = provider.GetRequiredService<RequestValidation>();
 
         // then
-        Assert.Contains(validations, validation => validation is DeviceNameValidation);
-        Assert.Contains(validations, validation => validation is DeviceHostValidation);
-        Assert.Contains(validations, validation => validation is DevicePortValidation);
-        Assert.Contains(validations, validation => validation is DeviceUsernameValidation);
-        Assert.Contains(validations, validation => validation is DeviceCredentialValidation);
+        Assert.Same(first, second);
     }
 
     [Fact]
-    public void AddAdapters_RegistersPageLimitValidation()
+    public void AddAdapters_RegistersEveryValueValidation()
     {
         // given
         var services = new ServiceCollection();
@@ -105,12 +97,12 @@ public class RestDependencyInjectionTests
         services.AddAdapters();
         var provider = services.BuildServiceProvider();
 
-        // when
-        var validations = provider
-            .GetRequiredService<IEnumerable<IValidation<GetDevicesRequest>>>()
-            .ToList();
-
-        // then
-        Assert.Contains(validations, validation => validation is PageLimitValidation);
+        // when / then
+        Assert.NotNull(provider.GetRequiredService<NameValidation>());
+        Assert.NotNull(provider.GetRequiredService<HostValidation>());
+        Assert.NotNull(provider.GetRequiredService<PortValidation>());
+        Assert.NotNull(provider.GetRequiredService<UsernameValidation>());
+        Assert.NotNull(provider.GetRequiredService<CredentialValidation>());
+        Assert.NotNull(provider.GetRequiredService<LimitValidation>());
     }
 }

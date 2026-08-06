@@ -1,6 +1,6 @@
 using System;
 
-namespace ConfigSync.Adapters.In.Rest.Models;
+namespace ConfigSync.Adapters.In.Rest.Models.Responses;
 
 public class ExecuteCommandResponse
 {

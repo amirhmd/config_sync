@@ -13,10 +13,10 @@ public class DeviceMapperTests
     public void ToDevice_WithPassword_SetsPasswordAuthenticationType()
     {
         // given
-        var mapper = AdaptersTestFixtures.BuildMapper(AdaptersTestFixtures.BuildEncryption());
+        var mapper = AdaptersTestConfiguration.BuildMapper(AdaptersTestConfiguration.BuildEncryption());
 
         // when
-        var device = mapper.ToDevice(AdaptersTestFixtures.PasswordRequest());
+        var device = mapper.ToDevice(AdaptersTestConfiguration.PasswordRequest());
 
         // then
         Assert.Equal(DeviceAuthenticationType.Password, device.AuthenticationType);
@@ -26,10 +26,10 @@ public class DeviceMapperTests
     public void ToDevice_WithPrivateKey_SetsPrivateKeyAuthenticationType()
     {
         // given
-        var mapper = AdaptersTestFixtures.BuildMapper(AdaptersTestFixtures.BuildEncryption());
+        var mapper = AdaptersTestConfiguration.BuildMapper(AdaptersTestConfiguration.BuildEncryption());
 
         // when
-        var device = mapper.ToDevice(AdaptersTestFixtures.PrivateKeyRequest());
+        var device = mapper.ToDevice(AdaptersTestConfiguration.PrivateKeyRequest());
 
         // then
         Assert.Equal(DeviceAuthenticationType.PrivateKey, device.AuthenticationType);
@@ -39,11 +39,11 @@ public class DeviceMapperTests
     public void ToDevice_EncryptsPassword_SoCiphertextIsNotPlaintext()
     {
         // given
-        var mapper = AdaptersTestFixtures.BuildMapper(AdaptersTestFixtures.BuildEncryption());
+        var mapper = AdaptersTestConfiguration.BuildMapper(AdaptersTestConfiguration.BuildEncryption());
         var plaintext = "secret123";
 
         // when
-        var device = mapper.ToDevice(AdaptersTestFixtures.PasswordRequest(password: plaintext));
+        var device = mapper.ToDevice(AdaptersTestConfiguration.PasswordRequest(password: plaintext));
 
         // then
         Assert.NotEqual(Encoding.UTF8.GetBytes(plaintext), device.Credential.GetCiphertext());
@@ -53,12 +53,12 @@ public class DeviceMapperTests
     public void ToDevice_EncryptsPassword_SoItDecryptsBackToPlaintext()
     {
         // given
-        var encryption = AdaptersTestFixtures.BuildEncryption();
-        var mapper = AdaptersTestFixtures.BuildMapper(encryption);
+        var encryption = AdaptersTestConfiguration.BuildEncryption();
+        var mapper = AdaptersTestConfiguration.BuildMapper(encryption);
         var plaintext = "secret123";
 
         // when
-        var device = mapper.ToDevice(AdaptersTestFixtures.PasswordRequest(password: plaintext));
+        var device = mapper.ToDevice(AdaptersTestConfiguration.PasswordRequest(password: plaintext));
 
         // then
         Assert.Equal(plaintext, encryption.DecryptPassword(device.Credential.GetCiphertext()));
@@ -68,12 +68,12 @@ public class DeviceMapperTests
     public void ToDevice_EncryptsPrivateKey_SoItDecryptsBackToPlaintext()
     {
         // given
-        var encryption = AdaptersTestFixtures.BuildEncryption();
-        var mapper = AdaptersTestFixtures.BuildMapper(encryption);
+        var encryption = AdaptersTestConfiguration.BuildEncryption();
+        var mapper = AdaptersTestConfiguration.BuildMapper(encryption);
         var plaintext = "-----BEGIN OPENSSH PRIVATE KEY-----";
 
         // when
-        var device = mapper.ToDevice(AdaptersTestFixtures.PrivateKeyRequest(privateKey: plaintext));
+        var device = mapper.ToDevice(AdaptersTestConfiguration.PrivateKeyRequest(privateKey: plaintext));
 
         // then
         Assert.Equal(plaintext, encryption.DecryptPrivateKey(device.Credential.GetCiphertext()));
@@ -83,10 +83,10 @@ public class DeviceMapperTests
     public void ToDevice_KeepsTheNameExactlyAsSupplied()
     {
         // given
-        var mapper = AdaptersTestFixtures.BuildMapper(AdaptersTestFixtures.BuildEncryption());
+        var mapper = AdaptersTestConfiguration.BuildMapper(AdaptersTestConfiguration.BuildEncryption());
 
         // when
-        var device = mapper.ToDevice(AdaptersTestFixtures.PasswordRequest(name: "router_01"));
+        var device = mapper.ToDevice(AdaptersTestConfiguration.PasswordRequest(name: "router_01"));
 
         // then
         Assert.Equal("router_01", device.Name);
@@ -96,7 +96,7 @@ public class DeviceMapperTests
     public void ToDevice_ThrowsWhenBothCredentialsProvided()
     {
         // given
-        var mapper = AdaptersTestFixtures.BuildMapper(AdaptersTestFixtures.BuildEncryption());
+        var mapper = AdaptersTestConfiguration.BuildMapper(AdaptersTestConfiguration.BuildEncryption());
         var request = new CreateDeviceRequest("router_01", "localhost", 2201, "device", "secret", "key");
 
         // when / then
@@ -107,7 +107,7 @@ public class DeviceMapperTests
     public void ToDevice_ThrowsWhenNeitherCredentialProvided()
     {
         // given
-        var mapper = AdaptersTestFixtures.BuildMapper(AdaptersTestFixtures.BuildEncryption());
+        var mapper = AdaptersTestConfiguration.BuildMapper(AdaptersTestConfiguration.BuildEncryption());
         var request = new CreateDeviceRequest("router_01", "localhost", 2201, "device", null, null);
 
         // when / then
@@ -118,8 +118,8 @@ public class DeviceMapperTests
     public void ToDetails_MapsAllFieldsWithPasswordWireValue()
     {
         // given
-        var mapper = AdaptersTestFixtures.BuildMapper(AdaptersTestFixtures.BuildEncryption());
-        var device = mapper.ToDevice(AdaptersTestFixtures.PasswordRequest());
+        var mapper = AdaptersTestConfiguration.BuildMapper(AdaptersTestConfiguration.BuildEncryption());
+        var device = mapper.ToDevice(AdaptersTestConfiguration.PasswordRequest());
 
         // when
         var details = mapper.ToDetails(device);
@@ -136,8 +136,8 @@ public class DeviceMapperTests
     public void ToDetails_MapsPrivateKeyWireValue()
     {
         // given
-        var mapper = AdaptersTestFixtures.BuildMapper(AdaptersTestFixtures.BuildEncryption());
-        var device = mapper.ToDevice(AdaptersTestFixtures.PrivateKeyRequest());
+        var mapper = AdaptersTestConfiguration.BuildMapper(AdaptersTestConfiguration.BuildEncryption());
+        var device = mapper.ToDevice(AdaptersTestConfiguration.PrivateKeyRequest());
 
         // when
         var details = mapper.ToDetails(device);
@@ -150,9 +150,9 @@ public class DeviceMapperTests
     public void ToPageDetails_MapsItemsInOrderAndCarriesCursor()
     {
         // given
-        var mapper = AdaptersTestFixtures.BuildMapper(AdaptersTestFixtures.BuildEncryption());
-        var first = mapper.ToDevice(AdaptersTestFixtures.PasswordRequest(name: "router_01"));
-        var second = mapper.ToDevice(AdaptersTestFixtures.PasswordRequest(name: "router_02"));
+        var mapper = AdaptersTestConfiguration.BuildMapper(AdaptersTestConfiguration.BuildEncryption());
+        var first = mapper.ToDevice(AdaptersTestConfiguration.PasswordRequest(name: "router_01"));
+        var second = mapper.ToDevice(AdaptersTestConfiguration.PasswordRequest(name: "router_02"));
         var page = new Page<Device>(new List<Device> { first, second }, "next-cursor");
 
         // when
@@ -169,7 +169,7 @@ public class DeviceMapperTests
     public void ToPageDetails_WithEmptyPage_ReturnsEmptyItemsAndNullCursor()
     {
         // given
-        var mapper = AdaptersTestFixtures.BuildMapper(AdaptersTestFixtures.BuildEncryption());
+        var mapper = AdaptersTestConfiguration.BuildMapper(AdaptersTestConfiguration.BuildEncryption());
         var page = new Page<Device>(new List<Device>(), null);
 
         // when

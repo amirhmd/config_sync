@@ -1,7 +1,6 @@
 using ConfigSync.Adapters.In.Rest.Api;
 using ConfigSync.Adapters.In.Rest.Endpoints;
 using ConfigSync.Adapters.In.Rest.Mappers;
-using ConfigSync.Adapters.In.Rest.Models.Requests;
 using ConfigSync.Adapters.In.Rest.Validation;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -16,12 +15,13 @@ internal static class RestDependencyInjection
 
         services.AddSingleton<IDeviceMapper, DeviceMapper>();
 
-        services.AddSingleton<IValidation<CreateDeviceRequest>, DeviceNameValidation>();
-        services.AddSingleton<IValidation<CreateDeviceRequest>, DeviceHostValidation>();
-        services.AddSingleton<IValidation<CreateDeviceRequest>, DevicePortValidation>();
-        services.AddSingleton<IValidation<CreateDeviceRequest>, DeviceUsernameValidation>();
-        services.AddSingleton<IValidation<CreateDeviceRequest>, DeviceCredentialValidation>();
-        services.AddSingleton<IValidation<GetDevicesRequest>, PageLimitValidation>();
+        services.AddSingleton<NameValidation>();
+        services.AddSingleton<HostValidation>();
+        services.AddSingleton<PortValidation>();
+        services.AddSingleton<UsernameValidation>();
+        services.AddSingleton<CredentialValidation>();
+        services.AddSingleton<LimitValidation>();
+        services.AddSingleton<RequestValidation>();
 
         return services;
     }

@@ -1,14 +1,10 @@
-using ConfigSync.Adapters.In.Rest.Models.Requests;
 using ConfigSync.Adapters.In.Rest.Validation;
 using Xunit;
 
 namespace ConfigSync.Adapters.Tests.In.Rest.Validation;
 
-public class DeviceHostValidationTests
+public class HostValidationTests
 {
-    private static CreateDeviceRequest RequestWithHost(string? host) =>
-        new("router_01", host, 2201, "device", "secret123", null);
-
     [Theory]
     [InlineData("localhost")]
     [InlineData("LOCALHOST")]
@@ -19,10 +15,10 @@ public class DeviceHostValidationTests
     public void Validate_AcceptsSupportedHostForms(string host)
     {
         // given
-        var validation = new DeviceHostValidation();
+        var validation = new HostValidation();
 
         // when
-        var result = validation.Validate(RequestWithHost(host));
+        var result = validation.Validate(host);
 
         // then
         Assert.True(result.IsValid);
@@ -36,10 +32,10 @@ public class DeviceHostValidationTests
     public void Validate_RejectsHostsCarryingExtraParts(string host)
     {
         // given
-        var validation = new DeviceHostValidation();
+        var validation = new HostValidation();
 
         // when
-        var result = validation.Validate(RequestWithHost(host));
+        var result = validation.Validate(host);
 
         // then
         Assert.False(result.IsValid);
@@ -50,10 +46,10 @@ public class DeviceHostValidationTests
     public void Validate_RejectsMissingHost()
     {
         // given
-        var validation = new DeviceHostValidation();
+        var validation = new HostValidation();
 
         // when
-        var result = validation.Validate(RequestWithHost("   "));
+        var result = validation.Validate(null);
 
         // then
         Assert.False(result.IsValid);
@@ -63,10 +59,10 @@ public class DeviceHostValidationTests
     public void Validate_RejectsHostLongerThan253Characters()
     {
         // given
-        var validation = new DeviceHostValidation();
+        var validation = new HostValidation();
 
         // when
-        var result = validation.Validate(RequestWithHost(new string('a', 254)));
+        var result = validation.Validate(new string('a', 254));
 
         // then
         Assert.False(result.IsValid);

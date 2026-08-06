@@ -1,7 +1,8 @@
 using System.Threading;
 using System.Threading.Tasks;
 using ConfigSync.Adapters.In.Rest.Api;
-using ConfigSync.Adapters.In.Rest.Models;
+using ConfigSync.Adapters.In.Rest.Models.Requests;
+using ConfigSync.Adapters.In.Rest.Models.Responses;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
