@@ -2,8 +2,6 @@ namespace ConfigSync.Adapters.In.Rest.Validation;
 
 public sealed class CredentialValidation
 {
-    private const string PropertyName = "credential";
-
     public ValidationResult Validate(string? password, string? privateKey)
     {
         var hasPassword = !string.IsNullOrWhiteSpace(password);
@@ -11,9 +9,7 @@ public sealed class CredentialValidation
 
         if (hasPassword == hasPrivateKey)
         {
-            return ValidationResult.Invalid(
-                PropertyName,
-                "Provide exactly one of password or private key.");
+            return ValidationResult.Invalid(ValidationErrors.CredentialProperty, ValidationErrors.CredentialMessage);
         }
 
         return ValidationResult.Valid;

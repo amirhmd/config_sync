@@ -5,28 +5,42 @@ namespace ConfigSync.Domain.Tests;
 public class DevicePageOutcomeTests
 {
     [Fact]
-    public void Success_CarriesThePage()
+    public void DevicePageSuccess_CarriesThePage()
     {
         // given
         var page = new Page<Device>([], null);
 
         // when
-        var outcome = DevicePageOutcome.Success(page);
+        var outcome = new DevicePageSuccess(page);
 
         // then
-        Assert.False(outcome.CursorIsInvalid);
         Assert.Same(page, outcome.Page);
     }
 
     [Fact]
-    public void InvalidCursor_CarriesAnEmptyPage()
+    public void DevicePageSuccess_IsADevicePageOutcome()
     {
         // given / when
-        var outcome = DevicePageOutcome.InvalidCursor();
+        DevicePageOutcome outcome = new DevicePageSuccess(new Page<Device>([], null));
 
         // then
-        Assert.True(outcome.CursorIsInvalid);
-        Assert.Empty(outcome.Page.Items);
-        Assert.Null(outcome.Page.NextCursor);
+        Assert.IsType<DevicePageSuccess>(outcome);
+    }
+
+    [Fact]
+    public void DevicePageInvalidCursor_IsADevicePageOutcome()
+    {
+        // given / when
+        DevicePageOutcome outcome = DevicePageInvalidCursor.Instance;
+
+        // then
+        Assert.IsType<DevicePageInvalidCursor>(outcome);
+    }
+
+    [Fact]
+    public void DevicePageInvalidCursor_ReusesASingleInstance()
+    {
+        // given / when / then
+        Assert.Same(DevicePageInvalidCursor.Instance, DevicePageInvalidCursor.Instance);
     }
 }

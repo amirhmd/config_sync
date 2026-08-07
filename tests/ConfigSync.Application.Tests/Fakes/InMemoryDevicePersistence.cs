@@ -33,16 +33,14 @@ internal sealed class InMemoryDevicePersistence : IDevicePersistence
     {
         if (cursor == InvalidCursor)
         {
-            return Task.FromResult(DevicePageOutcome.InvalidCursor());
+            return Task.FromResult<DevicePageOutcome>(DevicePageInvalidCursor.Instance);
         }
 
         var candidates = DevicesAfterCursor(cursor);
         var items = candidates.Take(limit).ToList();
         var nextCursor = NextCursor(candidates, items, limit);
 
-        var page = new Page<Device>(items, nextCursor);
-
-        return Task.FromResult(DevicePageOutcome.Success(page));
+        return Task.FromResult<DevicePageOutcome>(new DevicePageSuccess(new Page<Device>(items, nextCursor)));
     }
 
     public Task<DeleteOutcome> DeleteAsync(string name, CancellationToken cancellationToken)

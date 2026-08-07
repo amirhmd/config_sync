@@ -5,9 +5,6 @@ namespace ConfigSync.Adapters.In.Rest.Validation;
 
 public sealed class HostValidation
 {
-    private const string PropertyName = "host";
-    private const int MaximumHostLength = 253;
-
     public ValidationResult Validate(string? host)
     {
         if (IsAcceptable(host))
@@ -15,14 +12,12 @@ public sealed class HostValidation
             return ValidationResult.Valid;
         }
 
-        return ValidationResult.Invalid(
-            PropertyName,
-            $"Host is required, cannot exceed {MaximumHostLength} characters, and must be a DNS hostname, an IPv4 address, an IPv6 address, or localhost.");
+        return ValidationResult.Invalid(ValidationErrors.HostProperty, ValidationErrors.HostMessage);
     }
 
     private static bool IsAcceptable(string? host)
     {
-        if (string.IsNullOrWhiteSpace(host) || host.Length > MaximumHostLength)
+        if (string.IsNullOrWhiteSpace(host) || host.Length > ValidationErrors.MaximumHostLength)
         {
             return false;
         }

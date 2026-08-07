@@ -6,6 +6,7 @@ using ConfigSync.Adapters.In.Rest.Models.Requests;
 using ConfigSync.Adapters.In.Rest.Models.Responses;
 using ConfigSync.Adapters.In.Rest.Validation;
 using ConfigSync.Application.Ports.In;
+using ConfigSync.Domain;
 
 namespace ConfigSync.Adapters.In.Rest.Endpoints;
 
@@ -61,12 +62,16 @@ public sealed class DeviceEndpoint(IDeviceUseCase useCase, IDeviceMapper mapper,
 
         var outcome = await useCase.GetPageAsync(request.Cursor, request.Limit, cancellationToken);
 
-        if (outcome.CursorIsInvalid)
+        if (outcome is not DevicePageSuccess success)
         {
-            return GetDevicesResponse.Invalid(new ErrorDetails([new ValidationError("cursor", "Cursor is invalid")]));
+            return GetDevicesResponse.Invalid(new ErrorDetails([
+                    new ValidationError(
+                        ValidationErrors.CursorProperty,
+                        ValidationErrors.CursorMessage)
+                ]));
         }
 
-        return GetDevicesResponse.Success(mapper.ToPageDetails(outcome.Page));
+        return GetDevicesResponse.Success(mapper.ToPageDetails(success.Page));
     }
 
     public async Task<DeleteDeviceResponse> Delete(DeleteDeviceRequest request, CancellationToken cancellationToken)

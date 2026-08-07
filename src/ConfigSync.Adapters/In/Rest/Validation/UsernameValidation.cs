@@ -2,16 +2,11 @@ namespace ConfigSync.Adapters.In.Rest.Validation;
 
 public sealed class UsernameValidation
 {
-    private const string PropertyName = "username";
-    private const int MaximumUsernameLength = 64;
-
     public ValidationResult Validate(string? username)
     {
-        if (string.IsNullOrWhiteSpace(username) || username.Length > MaximumUsernameLength)
+        if (string.IsNullOrWhiteSpace(username) || username.Length > ValidationErrors.MaximumUsernameLength)
         {
-            return ValidationResult.Invalid(
-                PropertyName,
-                $"Username is required and cannot exceed {MaximumUsernameLength} characters.");
+            return ValidationResult.Invalid(ValidationErrors.UsernameProperty, ValidationErrors.UsernameMessage);
         }
 
         return ValidationResult.Valid;

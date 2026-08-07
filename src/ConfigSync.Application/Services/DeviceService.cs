@@ -37,12 +37,16 @@ public sealed class DeviceService(IDevicePersistence persistence, ILogger<Device
 
         var outcome = await persistence.GetPageAsync(cursor, limit, cancellationToken);
 
-        if (!outcome.CursorIsInvalid)
+        if (outcome is DevicePageSuccess success)
         {
             logger.LogInformation(
                 "Read device page returned {ItemCount} devices, more available {HasMore}",
-                outcome.Page.Items.Count,
-                outcome.Page.NextCursor is not null);
+                success.Page.Items.Count,
+                success.Page.NextCursor is not null);
+        }
+        else
+        {
+            logger.LogInformation("Read device page rejected the supplied cursor");
         }
 
         return outcome;

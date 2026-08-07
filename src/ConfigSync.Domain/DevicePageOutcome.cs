@@ -1,17 +1,9 @@
 namespace ConfigSync.Domain;
 
-public sealed class DevicePageOutcome
+public abstract class DevicePageOutcome
 {
-    public Page<Device> Page { get; }
-    public bool CursorIsInvalid { get; }
-
-    private DevicePageOutcome(Page<Device> page, bool cursorIsInvalid)
+    private protected DevicePageOutcome()
     {
-        Page = page;
-        CursorIsInvalid = cursorIsInvalid;
+        // only derived class from the current Project/assembly
     }
-
-    public static DevicePageOutcome Success(Page<Device> page) => new(page, false);
-
-    public static DevicePageOutcome InvalidCursor() => new(new Page<Device>([], null), true);
 }
