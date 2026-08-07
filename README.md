@@ -27,6 +27,11 @@ Start Postgres + mock devices:
 ./local-dev/local_dev_stop.sh
 ```
 
+db verifications
+```bash
+docker exec -it configsync-postgres psql -U configsync -d configsync -c '\d+ public.devices'
+```
+
 Build:
 ```bash
 dotnet build
