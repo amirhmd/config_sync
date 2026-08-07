@@ -20,7 +20,7 @@ public interface IDeviceUseCase
     /// <summary>
     /// Keyset pagination. Pass <c>null</c> as the cursor for the first page.
     /// </summary>
-    Task<Page<Device>> GetPageAsync(string? cursor, int limit, CancellationToken cancellationToken);
+    Task<DevicePageOutcome> GetPageAsync(string? cursor, int limit, CancellationToken cancellationToken);
 
     Task<DeleteOutcome> DeleteAsync(string name, CancellationToken cancellationToken);
 }

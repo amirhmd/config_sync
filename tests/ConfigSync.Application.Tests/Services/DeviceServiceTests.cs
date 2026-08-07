@@ -83,11 +83,12 @@ public class DeviceServiceTests
         await service.CreateAsync(BuildDevice("router_03"), TestContext.Current.CancellationToken);
 
         // when
-        var page = await service.GetPageAsync(null, 2, TestContext.Current.CancellationToken);
+        var outcome = await service.GetPageAsync(null, 2, TestContext.Current.CancellationToken);
 
         // then
-        Assert.Equal(2, page.Items.Count);
-        Assert.NotNull(page.NextCursor);
+        Assert.False(outcome.CursorIsInvalid);
+        Assert.Equal(2, outcome.Page.Items.Count);
+        Assert.NotNull(outcome.Page.NextCursor);
     }
 
     [Fact]
@@ -98,11 +99,12 @@ public class DeviceServiceTests
         await service.CreateAsync(BuildDevice("router_01"), TestContext.Current.CancellationToken);
 
         // when
-        var page = await service.GetPageAsync(null, 10, TestContext.Current.CancellationToken);
+        var outcome = await service.GetPageAsync(null, 10, TestContext.Current.CancellationToken);
 
         // then
-        Assert.Single(page.Items);
-        Assert.Null(page.NextCursor);
+        Assert.False(outcome.CursorIsInvalid);
+        Assert.Single(outcome.Page.Items);
+        Assert.Null(outcome.Page.NextCursor);
     }
 
     [Fact]
@@ -130,5 +132,18 @@ public class DeviceServiceTests
 
         // then
         Assert.Equal(DeleteOutcome.NotFound, outcome);
+    }
+    
+    [Fact]
+    public async Task GetPageAsync_ReturnsInvalidCursor_WhenPersistenceRejectsTheCursor()
+    {
+        // given
+        var service = BuildService();
+
+        // when
+        var outcome = await service.GetPageAsync(InMemoryDevicePersistence.InvalidCursor, 10, TestContext.Current.CancellationToken);
+
+        // then
+        Assert.True(outcome.CursorIsInvalid);
     }
 }

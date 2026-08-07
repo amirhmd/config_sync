@@ -8,6 +8,7 @@ using ConfigSync.Adapters.Tests.Fakes;
 using ConfigSync.Application;
 using ConfigSync.Application.Ports.In;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -32,6 +33,7 @@ internal sealed class DeviceEndpointTestHost : IAsyncDisposable
         var builder = WebApplication.CreateSlimBuilder();
         builder.WebHost.UseTestServer();
         builder.Services.AddSingleton(AdaptersTestConfiguration.BuildEncryption());
+        builder.Services.AddDataProtection().SetApplicationName("ConfigSync");
         builder.Services.AddApplication();
         builder.Services.AddAdapters();
 

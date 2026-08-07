@@ -1,4 +1,5 @@
 using ConfigSync.Adapters.Out.Persistence.Postgres;
+using ConfigSync.Adapters.Out.Persistence.Postgres.Mappers;
 using ConfigSync.Application.Ports.Out;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -10,6 +11,8 @@ internal static class PersistenceDependencyInjection
     {
 
         services.AddSingleton<IDevicePersistence, DeviceRepository>();
+        services.AddSingleton<IDeviceEntityMapper, DeviceEntityMapper>();
+        services.AddSingleton<CursorCodec>();
         return services;
     }
 }

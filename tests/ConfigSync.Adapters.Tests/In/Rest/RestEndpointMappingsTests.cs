@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Xunit;
+using ConfigSync.Adapters.Tests.Fakes;
 
 namespace ConfigSync.Adapters.Tests.In.Rest;
 
@@ -264,5 +265,27 @@ public class RestEndpointMappingsTests
             .GetProperty("errorDetails")
             .GetProperty("errors");
         Assert.Equal("name", errors[0].GetProperty("propertyName").GetString());
+    }
+    
+    [Fact]
+    public async Task GetDevices_ReturnsBadRequestForAnInvalidCursor()
+    {
+        // given
+        await using var host = await DeviceEndpointTestHost.StartAsync();
+
+        // when
+        using var response = await host.GetAsync($"/v1/devices?limit=50&cursor={InMemoryDeviceUseCase.InvalidCursor}");
+
+        // then
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+        var errors = (await ReadJsonAsync(response))
+            .GetProperty("errorDetails")
+            .GetProperty("errors");
+
+        var error = errors[0];
+
+        Assert.Equal("cursor", error.GetProperty("propertyName").GetString());
+        Assert.Equal("Cursor is invalid", error.GetProperty("message").GetString());
     }
 }

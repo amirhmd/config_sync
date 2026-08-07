@@ -17,7 +17,7 @@ internal sealed class DeviceRepository : IDevicePersistence
         throw new System.NotImplementedException();
     }
 
-    public Task<Page<Device>> GetPageAsync(string? cursor, int limit, CancellationToken cancellationToken)
+    public Task<DevicePageOutcome> GetPageAsync(string? cursor, int limit, CancellationToken cancellationToken)
     {
         throw new System.NotImplementedException();
     }

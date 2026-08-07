@@ -9,6 +9,7 @@ namespace ConfigSync.Application.Tests.Fakes;
 
 internal sealed class InMemoryDevicePersistence : IDevicePersistence
 {
+    internal const string InvalidCursor = "invalid-cursor";
     private readonly List<Device> _devices = new();
 
     public Task<CreateOutcome> InsertAsync(Device device, CancellationToken cancellationToken)
@@ -28,16 +29,20 @@ internal sealed class InMemoryDevicePersistence : IDevicePersistence
         return Task.FromResult(Find(name));
     }
 
-    public Task<Page<Device>> GetPageAsync(
-        string? cursor,
-        int limit,
-        CancellationToken cancellationToken)
+    public Task<DevicePageOutcome> GetPageAsync(string? cursor, int limit, CancellationToken cancellationToken)
     {
+        if (cursor == InvalidCursor)
+        {
+            return Task.FromResult(DevicePageOutcome.InvalidCursor());
+        }
+
         var candidates = DevicesAfterCursor(cursor);
         var items = candidates.Take(limit).ToList();
         var nextCursor = NextCursor(candidates, items, limit);
 
-        return Task.FromResult(new Page<Device>(items, nextCursor));
+        var page = new Page<Device>(items, nextCursor);
+
+        return Task.FromResult(DevicePageOutcome.Success(page));
     }
 
     public Task<DeleteOutcome> DeleteAsync(string name, CancellationToken cancellationToken)

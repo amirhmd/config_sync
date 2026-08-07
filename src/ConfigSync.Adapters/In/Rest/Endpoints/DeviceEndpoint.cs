@@ -59,9 +59,14 @@ public sealed class DeviceEndpoint(IDeviceUseCase useCase, IDeviceMapper mapper,
             return GetDevicesResponse.Invalid(errorDetails);
         }
 
-        var page = await useCase.GetPageAsync(request.Cursor, request.Limit, cancellationToken);
+        var outcome = await useCase.GetPageAsync(request.Cursor, request.Limit, cancellationToken);
 
-        return GetDevicesResponse.Success(mapper.ToPageDetails(page));
+        if (outcome.CursorIsInvalid)
+        {
+            return GetDevicesResponse.Invalid(new ErrorDetails([new ValidationError("cursor", "Cursor is invalid")]));
+        }
+
+        return GetDevicesResponse.Success(mapper.ToPageDetails(outcome.Page));
     }
 
     public async Task<DeleteDeviceResponse> Delete(DeleteDeviceRequest request, CancellationToken cancellationToken)

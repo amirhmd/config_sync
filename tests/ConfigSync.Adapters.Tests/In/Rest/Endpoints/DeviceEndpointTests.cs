@@ -195,4 +195,23 @@ public class DeviceEndpointTests
         Assert.NotNull(response.ErrorDetails);
         Assert.Null(response.Outcome);
     }
+    
+    [Fact]
+    public async Task GetPage_ReturnsInvalidForAnInvalidCursor()
+    {
+        // given
+        var useCase = new InMemoryDeviceUseCase();
+        var endpoint = AdaptersTestConfiguration.BuildEndpoint(useCase);
+        var request = new GetDevicesRequest(InMemoryDeviceUseCase.InvalidCursor, 50);
+
+        // when
+        var response = await endpoint.GetPage(request, TestContext.Current.CancellationToken);
+
+        // then
+        Assert.Null(response.Page);
+        Assert.NotNull(response.ErrorDetails);
+        var error = Assert.Single(response.ErrorDetails.Errors);
+        Assert.Equal("cursor", error.PropertyName);
+        Assert.Equal("Cursor is invalid", error.Message);
+    }
 }

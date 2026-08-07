@@ -31,17 +31,21 @@ public sealed class DeviceService(IDevicePersistence persistence, ILogger<Device
         return device;
     }
 
-    public async Task<Page<Device>> GetPageAsync(string? cursor, int limit, CancellationToken cancellationToken)
+    public async Task<DevicePageOutcome> GetPageAsync(string? cursor, int limit, CancellationToken cancellationToken)
     {
         logger.LogInformation("Reading device page with limit {Limit}", limit);
 
-        var page = await persistence.GetPageAsync(cursor, limit, cancellationToken);
+        var outcome = await persistence.GetPageAsync(cursor, limit, cancellationToken);
 
-        logger.LogInformation("Read device page returned {ItemCount} devices, more available {HasMore}",
-            page.Items.Count,
-            page.NextCursor is not null);
+        if (!outcome.CursorIsInvalid)
+        {
+            logger.LogInformation(
+                "Read device page returned {ItemCount} devices, more available {HasMore}",
+                outcome.Page.Items.Count,
+                outcome.Page.NextCursor is not null);
+        }
 
-        return page;
+        return outcome;
     }
 
     public async Task<DeleteOutcome> DeleteAsync(string name, CancellationToken cancellationToken)

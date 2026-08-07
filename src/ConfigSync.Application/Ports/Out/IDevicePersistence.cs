@@ -24,8 +24,9 @@ public interface IDevicePersistence
     /// <summary>
     /// Keyset pagination. Pass <c>null</c> for the first page, then the previous page's
     /// <see cref="Page{T}.NextCursor"/>. The cursor is opaque to callers.
+    /// Returns <see cref="DevicePageOutcome.InvalidCursor"/> when the cursor cannot be decoded.
     /// </summary>
-    Task<Page<Device>> GetPageAsync(string? cursor, int limit, CancellationToken cancellationToken);
+    Task<DevicePageOutcome> GetPageAsync(string? cursor, int limit, CancellationToken cancellationToken);
 
     /// <summary>
     /// Removes the device and its credential.

@@ -16,8 +16,7 @@ public sealed class DeviceEntityMapper : IDeviceEntityMapper
             ToCredential(entity));
     }
 
-    // The credential type comes from which column is populated, not from authentication_type.
-    // That column exists so the database CHECK can enforce the XOR
+    // The credential type is determined by which encrypted column is populated.
     private static DeviceCredential ToCredential(DeviceEntity entity)
     {
         if (entity.PasswordEncrypted is not null && entity.PrivateKeyEncrypted is null)
