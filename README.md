@@ -117,3 +117,82 @@ ssh-keygen -t ed25519 -f local-dev/mock-devices/keys/mock_devices_key -N "" -C "
 1. Create `local-dev/mock-devices/deviceN/respond.sh` — a `case "$SSH_ORIGINAL_COMMAND"` script returning canned text per command.
 2. Create `local-dev/mock-devices/deviceN/force-command.conf` — one line: `ForceCommand /etc/mock/respond.sh`.
 3. Add a `deviceN` service block to `local-dev/docker-compose.yml`, mounting both files plus the shared public key, on a new host port.
+
+## Manual API testing
+
+Start the service:
+
+```bash
+dotnet run --project src/ConfigSync
+```
+
+Health:
+
+```bash
+curl -s -o /dev/null -w "live=%{http_code}\n" http://localhost:5000/health/live
+curl -s -o /dev/null -w "ready=%{http_code}\n" http://localhost:5000/health/ready
+```
+
+Create with password:
+
+```bash
+curl -s -X POST http://localhost:5000/v1/devices -H "Content-Type: application/json" \
+  -d '{"name":"router_01","host":"localhost","port":2201,"username":"device","password":"secret123"}' | jq
+```
+
+Create with private key:
+
+```bash
+curl -s -X POST http://localhost:5000/v1/devices -H "Content-Type: application/json" \
+  -d '{"name":"switch_core","host":"10.0.0.1","port":22,"username":"admin","privateKey":"-----BEGIN OPENSSH PRIVATE KEY-----"}' | jq
+```
+
+Get:
+
+```bash
+curl -s http://localhost:5000/v1/devices/router_01 | jq
+```
+
+List:
+
+```bash
+curl -s "http://localhost:5000/v1/devices?limit=10" | jq
+```
+
+Delete:
+
+```bash
+curl -i -X DELETE http://localhost:5000/v1/devices/router_01
+```
+
+Create a `psql` helper for the local database:
+
+```bash
+psql() {
+  docker exec -i configsync-postgres \
+    psql -U configsync -d configsync "$@"
+}
+```
+
+Then query it normally:
+
+```bash
+psql -c "SELECT * FROM devices;"
+```
+
+Inspect credentials without printing ciphertext:
+
+```bash
+psql -c "
+SELECT
+    name,
+    password_encrypted IS NOT NULL AS has_password,
+    private_key_encrypted IS NOT NULL AS has_private_key
+FROM devices;"
+```
+
+Inspect the schema:
+
+```bash
+psql -c "\d devices"
+```

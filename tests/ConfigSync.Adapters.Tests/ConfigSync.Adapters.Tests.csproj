@@ -3,19 +3,19 @@
         <ProjectReference Include="../../src/ConfigSync.Adapters/ConfigSync.Adapters.csproj" />
         <ProjectReference Include="../../src/ConfigSync.Application/ConfigSync.Application.csproj" />
     </ItemGroup>
-
     <ItemGroup>
         <!-- WebApplication and ASP.NET Core types for endpoint route tests -->
         <FrameworkReference Include="Microsoft.AspNetCore.App" />
     </ItemGroup>
-
     <ItemGroup>
         <PackageReference Include="Microsoft.NET.Test.Sdk" PrivateAssets="All" />
         <PackageReference Include="xunit.v3" />
         <PackageReference Include="xunit.runner.visualstudio" PrivateAssets="All" />
         <PackageReference Include="Microsoft.AspNetCore.TestHost" />
+        <PackageReference Include="Npgsql">
+            <PrivateAssets>compile;build;buildMultitargeting;buildTransitive;native;contentFiles;analyzers</PrivateAssets>
+        </PackageReference>
     </ItemGroup>
-
     <PropertyGroup>
         <IsPackable>false</IsPackable>
     </PropertyGroup>

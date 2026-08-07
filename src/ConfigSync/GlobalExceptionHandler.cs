@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using ConfigSync.Adapters.Out.Persistence.Postgres.Exceptions;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -23,6 +24,24 @@ internal sealed class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> log
             return true;
         }
 
+        if (exception is PostgresTransientException)
+        {
+            logger.LogWarning(
+                exception,
+                "A dependency reported a transient failure on {Method} {Path}. Trace {TraceId}",
+                httpContext.Request.Method,
+                httpContext.Request.Path,
+                httpContext.TraceIdentifier);
+
+            await WriteProblemAsync(
+                httpContext,
+                StatusCodes.Status503ServiceUnavailable,
+                "The service is temporarily unavailable. Please retry.",
+                cancellationToken);
+
+            return true;
+        }
+
         logger.LogError(
             exception,
             "Unhandled exception on {Method} {Path}. Trace {TraceId}",
@@ -30,20 +49,11 @@ internal sealed class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> log
             httpContext.Request.Path,
             httpContext.TraceIdentifier);
 
-        var problemDetails = new ProblemDetails
-        {
-            Status = StatusCodes.Status500InternalServerError,
-            Title = "An unexpected error occurred.",
-            Instance = httpContext.Request.Path,
-            Extensions =
-            {
-                ["traceId"] = httpContext.TraceIdentifier
-            }
-        };
-
-        httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
-
-        await httpContext.Response.WriteAsJsonAsync(problemDetails, cancellationToken);
+        await WriteProblemAsync(
+            httpContext, 
+            StatusCodes.Status500InternalServerError, 
+            "An unexpected error occurred.", 
+            cancellationToken);
 
         return true;
     }
@@ -53,5 +63,23 @@ internal sealed class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> log
     private static bool ClientDisconnected(HttpContext httpContext, Exception exception)
     {
         return exception is OperationCanceledException && httpContext.RequestAborted.IsCancellationRequested;
+    }
+
+    private static async Task WriteProblemAsync(HttpContext httpContext, int statusCode, string title, CancellationToken cancellationToken)
+    {
+        var problemDetails = new ProblemDetails
+        {
+            Status = statusCode,
+            Title = title,
+            Instance = httpContext.Request.Path,
+            Extensions =
+            {
+                ["traceId"] = httpContext.TraceIdentifier
+            }
+        };
+
+        httpContext.Response.StatusCode = statusCode;
+
+        await httpContext.Response.WriteAsJsonAsync(problemDetails, cancellationToken);
     }
 }
