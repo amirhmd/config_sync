@@ -10,6 +10,14 @@
         <FrameworkReference Include="Microsoft.AspNetCore.App" />
     </ItemGroup>
     <ItemGroup>
+        <PackageReference Include="Npgsql">
+            <PrivateAssets>compile;build;buildMultitargeting;buildTransitive;native;contentFiles;analyzers</PrivateAssets>
+        </PackageReference>
+        <PackageReference Include="Dapper">
+            <PrivateAssets>compile;build;buildMultitargeting;buildTransitive;native;contentFiles;analyzers</PrivateAssets>
+        </PackageReference>
+    </ItemGroup>
+    <ItemGroup>
         <!-- to access internal class for testing -->
         <InternalsVisibleTo Include="ConfigSync.Adapters.Tests" />
     </ItemGroup>

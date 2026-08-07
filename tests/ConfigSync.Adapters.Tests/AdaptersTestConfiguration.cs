@@ -1,7 +1,9 @@
+using System;
 using ConfigSync.Adapters.In.Rest.Endpoints;
 using ConfigSync.Adapters.In.Rest.Mappers;
 using ConfigSync.Adapters.In.Rest.Models.Requests;
 using ConfigSync.Adapters.In.Rest.Validation;
+using ConfigSync.Adapters.Out.Persistence.Postgres.Entities;
 using ConfigSync.Application.Ports.In;
 using ConfigSync.Infrastructure.Credentials;
 using Microsoft.AspNetCore.DataProtection;
@@ -47,4 +49,20 @@ internal static class AdaptersTestConfiguration
         string name = "router_01",
         string privateKey = "-----BEGIN OPENSSH PRIVATE KEY-----") =>
         new(name, "localhost", 2201, "device", null, privateKey);
+
+    internal static DeviceEntity DeviceRow(
+        string name = "router_01",
+        byte[]? passwordEncrypted = null,
+        byte[]? privateKeyEncrypted = null) =>
+        new()
+        {
+            Id = 1,
+            Name = name,
+            Host = "localhost",
+            Port = 2201,
+            Username = "device",
+            PasswordEncrypted = passwordEncrypted,
+            PrivateKeyEncrypted = privateKeyEncrypted,
+            CreatedAt = DateTimeOffset.UtcNow
+        };
 }
